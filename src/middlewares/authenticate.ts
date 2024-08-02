@@ -24,12 +24,14 @@ export const authenticate: Controller = async (req, res, next) => {
       return next(HttpError(401, 'User not found'));
     }
 
-    if (!user.token) {
+    if (!user.accessToken) {
       return next(HttpError(401, 'User already logged out'));
     }
     req.user = user;
     next();
   } catch (error) {
-    next(HttpError(401, error.message));
+    if (error instanceof Error) {
+      next(HttpError(401, error.message));
+    }
   }
 };
