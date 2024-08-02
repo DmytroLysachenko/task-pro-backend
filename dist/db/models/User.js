@@ -1,5 +1,5 @@
-import { Schema } from 'mongoose';
-const userSchem = new Schema({
+import { Schema, model } from 'mongoose';
+const userSchema = new Schema({
     username: {
         type: String,
         required: [true, 'Username must exists'],
@@ -38,5 +38,6 @@ const userSchem = new Schema({
         type: String,
         default: '',
     },
-});
-export default userSchem;
+}, { versionKey: false, timestamps: true });
+const User = model('User', userSchema);
+export default User;
