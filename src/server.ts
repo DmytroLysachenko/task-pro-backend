@@ -1,5 +1,7 @@
+import express from 'express';
+import router from './routes/router.ts';
+
 // Importing module
-const express = require('express');
 
 const app = express();
 const PORT: number = 3000;
@@ -10,6 +12,4 @@ app.listen(PORT, () => {
     'The application is listening ' + 'on port http://localhost:' + PORT
   );
 });
-app.get('/', () => {
-  console.log('Get request completed');
-});
+app.get('/', router);
