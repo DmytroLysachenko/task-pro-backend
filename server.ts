@@ -10,3 +10,6 @@ app.listen(PORT, () => {
     'The application is listening ' + 'on port http://localhost:' + PORT
   );
 });
+app.get('/', () => {
+  console.log('Get request completed');
+});
