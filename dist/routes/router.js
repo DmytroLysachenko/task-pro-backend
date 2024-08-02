@@ -1,3 +1,3 @@
 export const router = (rec, res) => {
-    res.json({ body: 'sfasf' });
+  res.json({ body: 'sfasf' });
 };
