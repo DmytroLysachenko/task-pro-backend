@@ -12,7 +12,16 @@
     "preserveConstEnums": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
-    "target": "es2019"
+    "target": "es2019",
+    "strict": true
+  },
+  "tsc-alias": {
+    "verbose": false,
+    "resolveFullPaths": true,
+    "fileExtensions": {
+      "inputGlob": "{js,jsx,mjs}",
+      "outputCheck": ["js", "json", "jsx", "mjs"]
+    }
   },
   "include": ["**/*.ts"]
 }

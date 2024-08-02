@@ -8,9 +8,10 @@
   "main": "server.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
+    "build-w": "tsc && tsc-alias -w",
     "dev": "nodemon ./dist/server.js",
-    "start": "ts-node ./dist/server.js"
+    "start": "tsc && tsc-alias && node ./dist/server.js"
   },
   "keywords": [],
   "author": "Dmytro Lysachenko <dlysachenko98@gmail.com>",
@@ -37,6 +38,7 @@
     "globals": "^15.9.0",
     "nodemon": "^3.1.4",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.10",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.0.0"
   }

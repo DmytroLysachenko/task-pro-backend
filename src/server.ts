@@ -10,5 +10,7 @@ app.listen(PORT, () => {
   console.log(
     'The application is listening ' + 'on port http://localhost:' + PORT
   );
+  console.log('hello there');
+  console.log('one more console');
 });
 app.get('/', router);
