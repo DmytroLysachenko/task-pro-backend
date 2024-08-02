@@ -1,4 +1,4 @@
-import { router } from './routes/router';
+import { router } from './routes/router.js';
 import morgan from 'morgan';
 import cors from 'cors';
 import express from 'express';
