@@ -1,4 +1,4 @@
-// import { User } from '../db/schemas/User';
+// import User from '../db/models/User';
 
 // export async function registerUser({
 //   email,
@@ -15,10 +15,10 @@
 //   });
 // }
 
-// export async function findUser(filter) {
+// export async function findUser(filter: string | number) {
 //   return User.findOne(filter);
 // }
 
-// export async function updateUser(filter, data) {
+// export async function updateUser(filter: string | number, data) {
 //   return User.findOneAndUpdate(filter, data);
 // }
