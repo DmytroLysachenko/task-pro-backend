@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+
 import { Controller } from '../types';
 
 const ctrlWrapper = (controller: Controller) => {
