@@ -29,7 +29,7 @@ const userSchema = new Schema(
     },
     avatarUrl: {
       type: String,
-      default: '', // ??
+      default: '',
     },
     theme: {
       type: String,

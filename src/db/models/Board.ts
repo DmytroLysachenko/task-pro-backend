@@ -1,24 +1,24 @@
 import { Types, Document, Schema, model } from 'mongoose';
 
 import boardIcons from '../../constants/boardIcons';
-import boardBgImages from '../../constants/boardBgImgs';
+//import boardBgImages from '../../constants/boardBgImgs';
 
 interface IBoard extends Document {
   boardId: Types.ObjectId;
   userId: Types.ObjectId;
   title: string;
   icon: string;
-  backgroundImg: string;
+  backgroundImg: object;
   columns: object[]; // ?? IColumn
 }
 
 const boardSchema = new Schema(
   {
     boardId: {
-      type: Types.ObjectId, // ??
+      type: Types.ObjectId,
     },
     userId: {
-      type: Types.ObjectId, // ??
+      type: Types.ObjectId,
     },
     title: {
       type: String,
@@ -26,16 +26,18 @@ const boardSchema = new Schema(
     },
     icon: {
       type: String,
-      enum: boardIcons, // ??
-      default: 'icon_1', // ??
+      enum: boardIcons,
+      default: 'icon_1',
     },
     backgroundImg: {
-      type: String,
-      enum: boardBgImages, // ??
-      default: 'none', // ??
+      type: Object,
+      //enum: boardBgImages,
+      default: 'none',
     },
     columns: {
       type: [Schema.Types.Mixed], // ?? IColumn
+      ref: 'Column',
+      default: [],
     },
   },
   { versionKey: false, timestamps: true }
