@@ -1,4 +1,8 @@
-const messageList = {
+interface messageList {
+  [n: number]: string;
+}
+
+const messageList: messageList = {
   [400]: 'Bad Request',
   [401]: 'Unauthorized',
   [403]: 'Forbidden',

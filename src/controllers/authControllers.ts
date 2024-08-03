@@ -8,7 +8,7 @@ import ctrlWrapper from '../helpers/ctrlWrapper';
 import * as authServices from '../services/authServices';
 import { sendMail } from '../helpers/sendEmail';
 
-const registerUser: Controller = async (req, res, next) => {
+const registerUser: Controller = async (req, res) => {
   const { name, email, password } = req.body;
   const user = await authServices.findUser({ email });
   if (user) {
@@ -40,7 +40,7 @@ const registerUser: Controller = async (req, res, next) => {
   });
 };
 
-const loginUser: Controller = async (req, res, next) => {
+const loginUser: Controller = async (req, res) => {
   const JWT_SECRET = env('JWT_SECRET');
   const { email, password } = req.body;
   const user = await authServices.findUser({ email });
@@ -95,24 +95,24 @@ const getCurrentUser: Controller = async (req, res) => {
   });
 };
 
-const patchUser: Controller = async (req, res) => {
-  const { _id: id, email } = req.user;
-  const { subscription } = req.body;
+// const patchUser: Controller = async (req, res) => {
+//   const { _id: id, email } = req.user;
+//   const { subscription } = req.body;
 
-  if (!subscriptions.includes(subscription)) {
-    throw HttpError(
-      400,
-      `Subscription should be one of the following : ${subscriptions.join(
-        ', '
-      )}`
-    );
-  }
-  authServices.updateUser({ _id: id }, { subscription });
-  res.json({
-    status: 200,
-    data: { email, subscription },
-  });
-};
+//   if (!subscriptions.includes(subscription)) {
+//     throw HttpError(
+//       400,
+//       `Subscription should be one of the following : ${subscriptions.join(
+//         ', '
+//       )}`
+//     );
+//   }
+//   authServices.updateUser({ _id: id }, { subscription });
+//   res.json({
+//     status: 200,
+//     data: { email, subscription },
+//   });
+// };
 
 export default {
   registerUser: ctrlWrapper(registerUser),

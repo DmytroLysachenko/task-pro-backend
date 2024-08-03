@@ -1,16 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 
 interface RequestWithUser extends Request {
-  user: {
-    username?: string;
-    email?: string;
-    password?: string;
-    avatarUrl?: string;
-    theme?: 'light' | 'dark' | 'violet';
-    isVerified?: boolean;
-    verificationToken?: string;
-    accessToken?: string | null;
-    refreshToken?: string | null;
+  user?: {
+    _id: unknown;
+    username: string;
+    email: string;
+    avatarUrl: string;
+    theme: 'light' | 'dark' | 'violet';
+    isVerified: boolean;
   };
 }
 
@@ -34,9 +31,6 @@ export interface PatchUserDataType {
   avatarUrl?: string;
   theme?: 'light' | 'dark' | 'violet';
   isVerified?: boolean;
-  verificationToken?: string;
-  accessToken?: string | null;
-  refreshToken?: string | null;
 }
 
 export interface FindOneUserType {
