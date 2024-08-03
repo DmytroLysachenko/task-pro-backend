@@ -8,7 +8,7 @@ interface IBoard extends Document {
   title: string;
   icon: string;
   backgroundImg: object;
-  columns: object[]; // ?? IColumn
+  columns: object[]; // => IColumn
 }
 
 const boardSchema = new Schema(
@@ -33,7 +33,7 @@ const boardSchema = new Schema(
       default: {},
     },
     columns: {
-      type: [Schema.Types.Mixed], // ?? IColumn
+      type: Array,
       ref: 'Column',
       default: [],
     },
@@ -41,6 +41,6 @@ const boardSchema = new Schema(
   { versionKey: false, timestamps: true }
 );
 
-const Board = model<IBoard>('Board', boardSchema);
+const Board = model<IBoard>('board', boardSchema);
 
 export default Board;
