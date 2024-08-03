@@ -1,6 +1,6 @@
 import morgan from 'morgan';
 import cors from 'cors';
-import express from 'express';
+import express, { ErrorRequestHandler, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { env } from './helpers/env';
 import authRouter from './routes/authRouter';
@@ -23,6 +23,10 @@ const startServer = async () => {
   //  app.use('/board', boardRouter);   app.post('/:id', postBoardController)
   //  app.use('/column', columnRouter);
   //  app.use('/task', taskRouter);
+
+  app.use((_, res) => {
+    res.status(404).json({ message: 'Route not found' });
+  });
 
   app.listen(PORT, () => {
     console.log(`server started on ${PORT}`);

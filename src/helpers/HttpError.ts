@@ -1,3 +1,5 @@
+import { Response } from 'express';
+
 interface messageList {
   [n: number]: string;
 }
@@ -10,9 +12,16 @@ const messageList: messageList = {
   [409]: 'Conflict',
 };
 
-const HttpError = (status: number, message: string = messageList[status]) => {
-  const error = new Error(message);
-  return error;
+export interface CustomErrorType extends Error {
+  status: number;
+}
+
+const HttpError = (
+  res: Response,
+  status: number,
+  message: string = messageList[status]
+) => {
+  res.status(status).json({ message });
 };
 
 export default HttpError;
