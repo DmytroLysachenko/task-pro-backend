@@ -29,6 +29,8 @@ const startServer = async () => {
 
 startServer();
 
+export default startServer;
+
 // dmytro - RGih9kttVPr8OsXj
 // mongodb+srv://dmytro:RGih9kttVPr8OsXj@project-cluster.9biwlje.mongodb.net/
 
