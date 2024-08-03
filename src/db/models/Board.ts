@@ -1,15 +1,8 @@
-import { Types, Document, Schema, model } from 'mongoose';
+import { Types, Schema, model } from 'mongoose';
+
+import { IBoard } from '../../types';
 
 import boardIcons from '../../constants/boardIcons';
-
-interface IBoard extends Document {
-  boardId: Types.ObjectId;
-  userId: Types.ObjectId;
-  title: string;
-  icon: string;
-  backgroundImg: object;
-  columns: object[]; // => IColumn
-}
 
 const boardSchema = new Schema(
   {
