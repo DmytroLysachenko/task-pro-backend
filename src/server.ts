@@ -24,9 +24,6 @@ const startServer = async () => {
   //  app.use('/column', columnRouter);
   //  app.use('/task', taskRouter);
 
-  app.get('/', () => {
-    console.log('get request success');
-  });
   app.listen(PORT, () => {
     console.log(`server started on ${PORT}`);
   });
