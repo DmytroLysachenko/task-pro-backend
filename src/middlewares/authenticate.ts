@@ -18,18 +18,32 @@ export const authenticate: Controller = async (req, res, next) => {
   }
 
   try {
-    const { id } = jwt.verify(token, JWT_SECRET);
+    const { id } = jwt.verify(token, JWT_SECRET) as jwt.JwtPayload;
+
     const user = await findUser({ _id: id });
     if (!user) {
       return next(HttpError(401, 'User not found'));
     }
 
-    if (!user.token) {
+    if (!user.accessToken) {
       return next(HttpError(401, 'User already logged out'));
     }
-    req.user = user;
+
+    const { _id, username, email, avatarUrl, theme, isVerified } = user;
+
+    req.user = {
+      _id,
+      username,
+      email,
+      avatarUrl,
+      theme,
+      isVerified,
+    };
+
     next();
   } catch (error) {
-    next(HttpError(401, error.message));
+    if (error instanceof Error) {
+      next(HttpError(401, error.message));
+    }
   }
 };

@@ -8,7 +8,7 @@ const initMdbConnection = async () => {
     const password = env('MONGODB_PASSWORD');
     const url = env('MONGODB_URL');
     const name = env('MONGODB_NAME');
-    const DB_HOST = `mongodb+srv://${user}:${password}@${name}.${url}/?retryWrites=true&w=majority&appName=Project-cluster`;
+    const DB_HOST = `mongodb+srv://${user}:${password}@${url}/${name}?retryWrites=true&w=majority&appName=Project-cluster`;
 
     await mongoose.connect(DB_HOST);
 
