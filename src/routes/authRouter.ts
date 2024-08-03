@@ -2,6 +2,7 @@ import express from 'express';
 import validateBody from '../helpers/validateBody';
 import { loginSchema, registerSchema } from '../schemas/authSchemas';
 import authControllers from '../controllers/authControllers';
+import { authenticate } from '../middlewares/authenticate';
 
 const authRouter = express.Router();
 
@@ -13,7 +14,7 @@ authRouter.post(
 
 authRouter.post('/login', validateBody(loginSchema), authControllers.loginUser);
 
-// authRouter.post('/logout', authenticate, logoutUser);
+authRouter.post('/logout', authenticate, authControllers.logoutUser);
 
 // authRouter.get('/current', authenticate, getCurrentUser);
 
@@ -31,7 +32,7 @@ authRouter.post('/login', validateBody(loginSchema), authControllers.loginUser);
 //   patchAvatarUser
 // );
 
-// authRouter.get('/verify/:verificationToken', verifyUser);
+authRouter.get('/verify/:verificationToken', authControllers.verifyUser);
 
 // authRouter.post(
 //   '/verify',
