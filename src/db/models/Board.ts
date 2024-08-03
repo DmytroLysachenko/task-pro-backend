@@ -1,7 +1,6 @@
 import { Types, Document, Schema, model } from 'mongoose';
 
 import boardIcons from '../../constants/boardIcons';
-//import boardBgImages from '../../constants/boardBgImgs';
 
 interface IBoard extends Document {
   boardId: Types.ObjectId;
@@ -31,8 +30,7 @@ const boardSchema = new Schema(
     },
     backgroundImg: {
       type: Object,
-      //enum: boardBgImages,
-      default: 'none',
+      default: {},
     },
     columns: {
       type: [Schema.Types.Mixed], // ?? IColumn
