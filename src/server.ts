@@ -1,6 +1,6 @@
 import morgan from 'morgan';
 import cors from 'cors';
-import express, { ErrorRequestHandler, Request, Response } from 'express';
+import express from 'express';
 import dotenv from 'dotenv';
 import { env } from './helpers/env';
 import authRouter from './routes/authRouter';

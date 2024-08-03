@@ -1,6 +1,10 @@
 import express from 'express';
 import validateBody from '../helpers/validateBody';
-import { loginSchema, registerSchema } from '../schemas/authSchemas';
+import {
+  loginSchema,
+  patchSchema,
+  registerSchema,
+} from '../schemas/authSchemas';
 import authControllers from '../controllers/authControllers';
 import { authenticate } from '../middlewares/authenticate';
 
@@ -16,14 +20,14 @@ authRouter.post('/login', validateBody(loginSchema), authControllers.loginUser);
 
 authRouter.post('/logout', authenticate, authControllers.logoutUser);
 
-// authRouter.get('/current', authenticate, getCurrentUser);
+authRouter.get('/current', authenticate, authControllers.getCurrentUser);
 
-// authRouter.patch(
-//   '/subscription',
-//   authenticate,
-//   validateBody(updateUserSubscriptionSchema),
-//   patchSubscriptionUser
-// );
+authRouter.patch(
+  '/update',
+  authenticate,
+  validateBody(patchSchema),
+  authControllers.patchUser
+);
 
 // authRouter.patch(
 //   '/avatar',

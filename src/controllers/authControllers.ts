@@ -13,7 +13,7 @@ const registerUser: Controller = async (req, res) => {
   const user = await authServices.findUser({ email });
 
   if (user) {
-    throw HttpError(res, 409, 'Email already in use');
+    return HttpError(res, 409, 'Email already in use');
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
@@ -51,11 +51,11 @@ const loginUser: Controller = async (req, res) => {
   const { email, password } = req.body;
   const user = await authServices.findUser({ email });
   if (!user) {
-    throw HttpError(res, 401, 'Email or password invalid');
+    return HttpError(res, 401, 'Email or password invalid');
   }
 
   if (!user.isVerified) {
-    throw HttpError(
+    return HttpError(
       res,
       400,
       'User mail is not verified, please check your mail for following instructions'
@@ -64,7 +64,7 @@ const loginUser: Controller = async (req, res) => {
 
   const passwordCompare = await bcrypt.compare(password, user.password);
   if (!passwordCompare) {
-    throw HttpError(res, 401, 'Email or password invalid');
+    return HttpError(res, 401, 'Email or password invalid');
   }
 
   const { _id } = user;
@@ -85,6 +85,7 @@ const loginUser: Controller = async (req, res) => {
       user: {
         username: updUser?.username,
         email: updUser?.email,
+        avatarUrl: updUser?.avatarUrl,
         theme: updUser?.theme,
       },
     },
@@ -93,51 +94,98 @@ const loginUser: Controller = async (req, res) => {
 
 const logoutUser: Controller = async (req, res) => {
   const _id = req.user;
-  const updUser = await authServices.updateUser(
+  await authServices.updateUser(
     { _id },
     { accessToken: null, refreshToken: null }
   );
   res.json({ status: 204, message: 'Successfully logged out!' });
 };
 
-// const getCurrentUser: Controller = async (req, res) => {
-//   const { email, username, avatarUrl, theme } = req.user;
+const getCurrentUser: Controller = async (req, res) => {
+  const { email, username, avatarUrl, theme } = req.user as {
+    email: string;
+    username: string;
+    avatarUrl: string;
+    theme: string;
+  };
 
-//   res.json({
-//     status: 200,
-//     data: { username, email, avatarUrl, theme },
-//   });
-// };
+  res.json({
+    status: 200,
+    data: { username, email, avatarUrl, theme },
+  });
+};
 
-// const patchUser: Controller = async (req, res) => {
-//   const { _id: id, email } = req.user;
-//   const { subscription } = req.body;
+const patchUser: Controller = async (req, res) => {
+  const { username, email, password, theme } = req.body;
+  const { _id } = req.user as {
+    _id: unknown;
+  };
 
-//   if (!subscriptions.includes(subscription)) {
-//     throw HttpError(
-//       400,
-//       `Subscription should be one of the following : ${subscriptions.join(
-//         ', '
-//       )}`
-//     );
-//   }
-//   authServices.updateUser({ _id: id }, { subscription });
-//   res.json({
-//     status: 200,
-//     data: { email, subscription },
-//   });
-// };
-export const verifyUser: Controller = async (req, res, next) => {
+  let hashPassword;
+  let verificationToken;
+  let isVerified;
+
+  if (password) {
+    hashPassword = await bcrypt.hash(password, 10);
+  }
+
+  if (email) {
+    const userWithNewMail = await authServices.findUser({ email });
+    if (userWithNewMail) {
+      return HttpError(
+        res,
+        408,
+        'Cannot change email to that which is already occupied.'
+      );
+    }
+    const BASE_URL = env('BASE_URL');
+    verificationToken = nanoid(12);
+    isVerified = false;
+    const data = {
+      to: email,
+      subject: 'Confirm your registration in Contact List app',
+      text: 'Press on the link to confirm your email',
+      html: `Good day! Please click on the following link to confirm your account in Task-pro app. <a href="${BASE_URL}/auth/verify/${verificationToken}" target="_blank" rel="noopener noreferrer">Confirm my mail</a>`,
+    };
+
+    await sendMail(data);
+  }
+
+  await authServices.updateUser(
+    { _id },
+    {
+      username,
+      email,
+      password: hashPassword,
+      theme,
+      isVerified,
+      verificationToken,
+    }
+  );
+
+  const newUser = await authServices.findUser({ _id });
+
+  res.json({
+    status: 200,
+    data: {
+      username: newUser?.username,
+      email: newUser?.email,
+      theme: newUser?.theme,
+    },
+  });
+};
+
+export const verifyUser: Controller = async (req, res) => {
   const { verificationToken } = req.params;
 
   const user = await authServices.findUser({
     verificationToken,
   });
   if (!user) {
-    throw HttpError(res, 400, 'Invalid verification token');
+    return HttpError(res, 400, 'Invalid verification token');
   }
   if (user.isVerified) {
-    throw HttpError(res, 400, 'Verification has already been passed');
+    return HttpError(res, 400, 'Verification has already been passed');
   }
   await authServices.updateUser(
     { verificationToken },
@@ -153,6 +201,6 @@ export default {
   loginUser: ctrlWrapper(loginUser),
   logoutUser: ctrlWrapper(logoutUser),
   verifyUser: ctrlWrapper(verifyUser),
-  // patchUser: ctrlWrapper(patchUser),
-  // getCurrentUser: ctrlWrapper(getCurrentUser),
+  getCurrentUser: ctrlWrapper(getCurrentUser),
+  patchUser: ctrlWrapper(patchUser),
 };
