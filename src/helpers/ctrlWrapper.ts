@@ -3,9 +3,9 @@ import { Controller } from '../types';
 
 const ctrlWrapper = (controller: Controller) => {
   const func: Controller = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+    req,
+    res,
+    next
   ) => {
     try {
       await controller(req, res, next);
