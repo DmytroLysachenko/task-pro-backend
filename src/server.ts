@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { env } from './helpers/env';
 import authRouter from './routes/authRouter';
 import columnRouter from './routes/columnRouter';
+import boardRouter from './routes/boardRouter';
 
 dotenv.config();
 // Server setup
@@ -18,7 +19,8 @@ const startServer = async () => {
   app.use(express.json());
 
   app.use('/auth', authRouter);
-  //  app.use('/board', boardRouter);   app.post('/:id', postBoardController)
+  app.use('/board', boardRouter);
+  //app.post('/:id', postBoardController)
   app.use('/:boardId/column', columnRouter);
   //  app.use('/task', taskRouter);
 
