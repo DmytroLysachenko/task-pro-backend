@@ -1,7 +1,6 @@
 import { Types, Document, Schema, model } from 'mongoose';
 
 import boardIcons from '../../constants/boardIcons';
-//import boardBgImages from '../../constants/boardBgImgs';
 
 interface IBoard extends Document {
   boardId: Types.ObjectId;
@@ -9,7 +8,7 @@ interface IBoard extends Document {
   title: string;
   icon: string;
   backgroundImg: object;
-  columns: object[]; // ?? IColumn
+  columns: object[]; // => IColumn
 }
 
 const boardSchema = new Schema(
@@ -31,11 +30,10 @@ const boardSchema = new Schema(
     },
     backgroundImg: {
       type: Object,
-      //enum: boardBgImages,
-      default: 'none',
+      default: {},
     },
     columns: {
-      type: [Schema.Types.Mixed], // ?? IColumn
+      type: Array,
       ref: 'Column',
       default: [],
     },
@@ -43,6 +41,6 @@ const boardSchema = new Schema(
   { versionKey: false, timestamps: true }
 );
 
-const Board = model<IBoard>('Board', boardSchema);
+const Board = model<IBoard>('board', boardSchema);
 
 export default Board;

@@ -56,6 +56,6 @@ const userSchema = new Schema(
   { versionKey: false, timestamps: true }
 );
 
-const User = model<IUser>('User', userSchema);
+const User = model<IUser>('user', userSchema);
 
 export default User;
