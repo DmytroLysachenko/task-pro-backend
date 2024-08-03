@@ -1,12 +1,17 @@
-// import express from 'express';
-// import validateBody from '../helpers/validateBody';
-// import { loginSchema, registerSchema } from '../schemas/authSchemas';
+import express from 'express';
+import validateBody from '../helpers/validateBody';
+import { loginSchema, registerSchema } from '../schemas/authSchemas';
+import authControllers from '../controllers/authControllers';
 
-// const authRouter = express.Router();
+const authRouter = express.Router();
 
-// authRouter.post('/register', validateBody(registerSchema), registerUser);
+authRouter.post(
+  '/register',
+  validateBody(registerSchema),
+  authControllers.registerUser
+);
 
-// authRouter.post('/login', validateBody(loginSchema), loginUser);
+authRouter.post('/login', validateBody(loginSchema), authControllers.loginUser);
 
 // authRouter.post('/logout', authenticate, logoutUser);
 
@@ -34,4 +39,4 @@
 //   resendVerifyMessage
 // );
 
-// export default authRouter;
+export default authRouter;
