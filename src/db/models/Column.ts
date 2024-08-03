@@ -1,12 +1,6 @@
-import { Types, Document, Schema, model } from 'mongoose';
+import { Types, Schema, model } from 'mongoose';
 
-interface IColumn extends Document {
-  columnId: Types.ObjectId;
-  boardId: Types.ObjectId;
-  userId: Types.ObjectId;
-  title: string;
-  tasks: object[]; // => ITask
-}
+import { IColumn } from '../../types';
 
 const columnSchema = new Schema(
   {

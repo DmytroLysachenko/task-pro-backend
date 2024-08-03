@@ -3,6 +3,8 @@ import { Request, Response } from 'express';
 import ctrlWrapper from '../helpers/ctrlWrapper';
 
 const addColumn = (req: Request, res: Response) => {
+  const data = req.body;
+
   res.status(201).json({
     res: 'Add success!',
   });

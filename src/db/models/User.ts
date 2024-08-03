@@ -1,16 +1,6 @@
 import { Document, Schema, model } from 'mongoose';
 
-interface IUser extends Document {
-  username: string;
-  email: string;
-  password: string;
-  avatarUrl: string;
-  theme: 'light' | 'dark' | 'violet';
-  isVerified: boolean;
-  verificationToken: string;
-  accessToken: string;
-  refreshToken: string;
-}
+import { IUser } from '../../types';
 
 const userSchema = new Schema(
   {

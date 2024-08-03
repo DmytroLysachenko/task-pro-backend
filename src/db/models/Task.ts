@@ -1,17 +1,8 @@
 import { Types, Document, Schema, model } from 'mongoose';
 
-import taskPriorityLabels from '../../constants/taskPriorityLabels';
+import { ITask } from '../../types';
 
-interface ITask extends Document {
-  taskId: Types.ObjectId;
-  columnId: Types.ObjectId;
-  boardId: Types.ObjectId;
-  userId: Types.ObjectId;
-  title: string;
-  description: string;
-  priority: string;
-  deadline: string;
-}
+import taskPriorityLabels from '../../constants/taskPriorityLabels';
 
 const taskSchema = new Schema(
   {
