@@ -1,8 +1,21 @@
+import { IFilter, IColumnBody } from '../types';
+
 import Column from '../db/models/Column';
 
-interface IFilter {}
+const createColumn = (body: IColumnBody) => {
+  return Column.create(body);
+};
 
-interface IBody {}
+const updateColumn = (filter: IFilter, body: IColumnBody) => {
+  return Column.findOneAndUpdate(filter, body, { new: true });
+};
 
-const updateContact = (filter: IFilter, body: IBody) =>
-  Column.findOneAndUpdate(filter, body);
+const deleteColumn = (filter: IFilter) => {
+  return Column.findByIdAndDelete(filter);
+};
+
+export default {
+  createColumn,
+  updateColumn,
+  deleteColumn,
+};

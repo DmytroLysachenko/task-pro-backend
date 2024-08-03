@@ -88,3 +88,9 @@ export interface IUser extends Document {
   accessToken: string;
   refreshToken: string;
 }
+
+export interface IFilter {
+  _id: string;
+}
+
+export interface IColumnBody extends Partial<IColumn> {}

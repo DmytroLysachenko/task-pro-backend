@@ -4,10 +4,10 @@ import columnCtrl from '../controllers/columnControllers';
 
 const columnRouter = express.Router();
 
-columnRouter.post('/', columnCtrl.addColumn);
+columnRouter.post('/', columnCtrl.createColumn);
 
-columnRouter.patch('/:columnId', columnCtrl.editColumn);
+columnRouter.patch('/:id', columnCtrl.updateColumn);
 
-columnRouter.delete('/:columnId', columnCtrl.deleteColumn);
+columnRouter.delete('/:id', columnCtrl.deleteColumn);
 
 export default columnRouter;

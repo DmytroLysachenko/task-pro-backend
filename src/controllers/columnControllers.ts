@@ -1,27 +1,45 @@
 import { Request, Response } from 'express';
 
 import ctrlWrapper from '../helpers/ctrlWrapper';
+import columnServices from '../services/columnServices';
 
-const addColumn = (req: Request, res: Response) => {
-  const data = req.body;
+const createColumn = async (req: Request, res: Response) => {
+  const body = req.body;
+
+  const data = await columnServices.createColumn(body);
 
   res.status(201).json({
-    res: 'Add success!',
+    status: 201,
+    message: 'Column successfully created',
+    data,
   });
 };
 
-const editColumn = (req: Request, res: Response) => {
+const updateColumn = async (req: Request, res: Response) => {
+  const body = req.body;
+  const { id: _id } = req.params;
+  console.log(_id);
+
+  const data = await columnServices.updateColumn({ _id }, body);
+  console.log(data);
+
   res.status(200).json({
-    res: 'Edit success!',
+    status: 200,
+    message: 'Column successfully updated',
+    data,
   });
 };
 
-const deleteColumn = (req: Request, res: Response) => {
+const deleteColumn = async (req: Request, res: Response) => {
+  const { id: _id } = req.params;
+
+  await columnServices.deleteColumn({ _id });
+
   res.status(204).json();
 };
 
 export default {
-  addColumn,
-  editColumn,
-  deleteColumn,
+  createColumn: ctrlWrapper(createColumn),
+  updateColumn: ctrlWrapper(updateColumn),
+  deleteColumn: ctrlWrapper(deleteColumn),
 };
