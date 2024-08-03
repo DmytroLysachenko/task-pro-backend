@@ -31,6 +31,9 @@ export interface PatchUserDataType {
   avatarUrl?: string;
   theme?: 'light' | 'dark' | 'violet';
   isVerified?: boolean;
+  verificationToken?: string;
+  accessToken?: string | null;
+  refreshToken?: string | null;
 }
 
 export interface FindOneUserType {

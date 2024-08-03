@@ -5,13 +5,13 @@
   "name": "task-pro-backend",
   "version": "1.0.0",
   "description": "Task pro application back-end based on ts",
-  "main": "server.ts",
+  "main": "app.js",
   "type": "module",
   "scripts": {
     "build": "tsc && tsc-alias",
     "build-w": "tsc && tsc-alias -w",
-    "dev": "nodemon ./dist/server.js",
-    "start": "tsc && tsc-alias && node ./dist/server.js"
+    "dev": "nodemon ./dist/app.js",
+    "start": "tsc && tsc-alias && node ./dist/app.js"
   },
   "keywords": [],
   "author": "Dmytro Lysachenko <dlysachenko98@gmail.com>",

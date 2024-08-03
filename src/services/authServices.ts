@@ -2,20 +2,20 @@ import User from '../db/models/User';
 import { FindOneUserType, PatchUserDataType } from '../types';
 
 interface RegisterPropsType {
-  name: string;
+  username: string;
   email: string;
   password: string;
   verificationToken: string;
 }
 
 export async function registerUser({
-  name,
+  username,
   email,
   password,
   verificationToken,
 }: RegisterPropsType) {
   return User.create({
-    name,
+    username,
     email,
     password,
     verificationToken,
