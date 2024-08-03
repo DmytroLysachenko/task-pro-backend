@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { Document, Types } from 'mongoose';
 
-interface RequestWithUser extends Request {
+export interface RequestWithUser extends Request {
   user?: {
-    _id: unknown;
+    _id: unknown | string;
     username: string;
     email: string;
     avatarUrl: string;
@@ -94,3 +94,4 @@ export interface IFilter {
 }
 
 export interface IColumnBody extends Partial<IColumn> {}
+export interface IBoardBody extends Partial<IBoard> {}
