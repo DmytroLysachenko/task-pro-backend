@@ -32,8 +32,7 @@ startServer();
 export default startServer;
 
 // dmytro - RGih9kttVPr8OsXj
-// mongodb+srv://dmytro:RGih9kttVPr8OsXj@project-cluster.9biwlje.mongodb.net/
-
+// mongodb+srv://dmytro:RGih9kttVPr8OsXj@project-cluster.9biwlje.mongodb.net/task-pro-db?retryWrites=true&w=majority&appName=Project-cluster
 //tymur - wc6Lk5KfOhWcofmt
 
 //vitalii-

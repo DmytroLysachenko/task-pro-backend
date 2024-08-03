@@ -1,24 +1,33 @@
-// import User from '../db/models/User';
+import User from '../db/models/User';
+import { FindOneUserType, PatchUserDataType } from '../types';
 
-// export async function registerUser({
-//   email,
-//   password,
-//   verificationToken,
-//   avatarURL,
-// }) {
-//   return User.create({
-//     email,
-//     password,
-//     subscription: 'starter',
-//     avatarURL,
-//     verificationToken,
-//   });
-// }
+export async function registerUser({
+  name,
+  email,
+  password,
+  verificationToken,
+}: {
+  name: string;
+  email: string;
+  password: string;
+  verificationToken: string;
+}) {
+  return User.create({
+    name,
+    email,
+    password,
+    subscription: 'starter',
+    verificationToken,
+  });
+}
 
-// export async function findUser(filter: string | number) {
-//   return User.findOne(filter);
-// }
+export async function findUser(filter: FindOneUserType) {
+  return User.findOne(filter);
+}
 
-// export async function updateUser(filter: string | number, data) {
-//   return User.findOneAndUpdate(filter, data);
-// }
+export async function updateUser(
+  filter: FindOneUserType,
+  data: PatchUserDataType
+) {
+  return User.findOneAndUpdate(filter, data);
+}
