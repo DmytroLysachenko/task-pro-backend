@@ -9,12 +9,12 @@ export const authenticate: Controller = async (req, res, next) => {
   const JWT_SECRET = env('JWT_SECRET');
 
   if (!authorization) {
-    return next(HttpError(res, 401, `Authorization header not found`));
+    return HttpError(res, 401, `Authorization header not found`);
   }
 
   const [bearer, token] = authorization.split(' ');
   if (bearer !== 'Bearer') {
-    return next(HttpError(res, 401, 'Bearer not found'));
+    return HttpError(res, 401, 'Bearer not found');
   }
 
   try {
@@ -22,11 +22,11 @@ export const authenticate: Controller = async (req, res, next) => {
 
     const user = await findUser({ _id: id });
     if (!user) {
-      return next(HttpError(res, 401, 'User not found'));
+      return HttpError(res, 401, 'User not found');
     }
 
     if (!user.accessToken) {
-      return next(HttpError(res, 401, 'User already logged out'));
+      return HttpError(res, 401, 'User already logged out');
     }
 
     const { _id, username, email, avatarUrl, theme, isVerified } = user;
@@ -43,7 +43,9 @@ export const authenticate: Controller = async (req, res, next) => {
     next();
   } catch (error) {
     if (error instanceof Error) {
-      next(HttpError(res, 401, error.message));
+      HttpError(res, 401, error.message);
+    } else {
+      HttpError(res, 401, 'Something went wrong during authentication');
     }
   }
 };
