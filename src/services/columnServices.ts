@@ -4,11 +4,10 @@ import Column from '../db/models/Column';
 import Board from '../db/models/Board';
 
 const createColumn = async (body: IColumnBody) => {
-  const { boardId } = body;
-  console.log(boardId);
   const newColumn = await Column.create(body);
 
   const { _id } = newColumn;
+  const { boardId } = body;
 
   await Board.findByIdAndUpdate({ _id: boardId }, { $push: { columns: _id } });
 

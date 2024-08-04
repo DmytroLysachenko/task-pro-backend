@@ -6,17 +6,17 @@ import taskPriorityLabels from '../../constants/taskPriorityLabels';
 
 const taskSchema = new Schema(
   {
-    taskId: {
-      type: Types.ObjectId,
-    },
     columnId: {
       type: Types.ObjectId,
+      required: [true, 'Column id must exists'],
     },
     boardId: {
       type: Types.ObjectId,
+      required: [true, 'Board id must exists'],
     },
     userId: {
       type: Types.ObjectId,
+      required: [true, 'User id must exists'],
     },
     title: {
       type: String,
