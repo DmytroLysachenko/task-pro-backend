@@ -7,10 +7,10 @@ const validateBody = (schema: Joi.ObjectSchema) => {
     const { error } = schema.validate(req.body, { abortEarly: false });
 
     if (error && error.message === '"value" must have at least 1 key') {
-      return HttpError(res, 400, 'Body must have at least one field');
+      next(new HttpError(400, 'Body must have at least one field'));
     }
     if (error) {
-      HttpError(res, 400, error.message);
+      next(new HttpError(400, error.message));
     }
     next();
   };

@@ -1,4 +1,8 @@
-const boardBgImages = {
+interface BoardBgImagesType {
+  [key: string]: null | { mobile: string; tablet: string; desktop: string };
+}
+
+const boardBgImages: BoardBgImagesType = {
   none: null,
   image_1: {
     mobile:
