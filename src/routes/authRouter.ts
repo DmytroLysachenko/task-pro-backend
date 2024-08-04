@@ -3,12 +3,14 @@ import validateBody from '../helpers/validateBody';
 import {
   loginSchema,
   patchSchema,
+  refreshTokenSchema,
   registerSchema,
   resendVerifyMessageSchema,
 } from '../schemas/authSchemas';
 import authControllers from '../controllers/authControllers';
 import { authenticate } from '../middlewares/authenticate';
 import upload from '../middlewares/upload';
+import isEmptyBody from '../middlewares/isEmptyBody';
 
 const authRouter = express.Router();
 
@@ -24,10 +26,13 @@ authRouter.post('/logout', authenticate, authControllers.logoutUser);
 
 authRouter.get('/current', authenticate, authControllers.getCurrentUser);
 
+authRouter.post('/refresh', validateBody(refreshTokenSchema));
+
 authRouter.patch(
   '/update',
   upload.single('avatar'),
   authenticate,
+  isEmptyBody,
   validateBody(patchSchema),
   authControllers.patchUser
 );
