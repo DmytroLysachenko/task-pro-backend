@@ -6,15 +6,11 @@ import HttpError from '../helpers/HttpError';
 
 const createColumn: Controller = async (req, res) => {
   const userId = req.user?._id;
-
-  const { boardId } = req.params;
-
   const { body } = req;
+  const { boardId } = req.params;
 
   body.userId = userId;
   body.boardId = boardId;
-
-  console.log(body);
 
   const data = await columnServices.createColumn(body);
 
@@ -25,14 +21,14 @@ const createColumn: Controller = async (req, res) => {
   });
 };
 
-const updateColumn: Controller = async (req, res) => {
+const updateColumn: Controller = async (req, res, next) => {
   const body = req.body;
   const { id: _id } = req.params;
 
   const data = await columnServices.updateColumn({ _id }, body);
 
   if (!data) {
-    throw new HttpError(404, `Column with ${_id} not found`);
+    throw new HttpError(404, `Column with id:${_id} not found`);
   }
 
   res.status(200).json({
@@ -45,7 +41,11 @@ const updateColumn: Controller = async (req, res) => {
 const deleteColumn: Controller = async (req, res) => {
   const { id: _id, boardId } = req.params;
 
-  await columnServices.deleteColumn({ _id }, boardId);
+  const data = await columnServices.deleteColumn({ _id }, boardId);
+
+  if (!data) {
+    throw new HttpError(404, `Column with id:${_id} not found`);
+  }
 
   res.status(204).json();
 };
