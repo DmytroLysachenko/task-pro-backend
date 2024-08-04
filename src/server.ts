@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { env } from './helpers/env';
 import authRouter from './routes/authRouter';
 import columnRouter from './routes/columnRouter';
+import boardRouter from './routes/boardRouter';
 
 dotenv.config();
 // Server setup
@@ -18,7 +19,8 @@ const startServer = async () => {
   app.use(express.json());
 
   app.use('/auth', authRouter);
-  //  app.use('/board', boardRouter);   app.post('/:id', postBoardController)
+  app.use('/board', boardRouter);
+  //app.post('/:id', postBoardController)
   app.use('/:boardId/column', columnRouter);
   //  app.use('/task', taskRouter);
 
@@ -35,6 +37,5 @@ export default startServer;
 
 // dmytro - RGih9kttVPr8OsXj
 // mongodb+srv://dmytro:RGih9kttVPr8OsXj@project-cluster.9biwlje.mongodb.net/task-pro-db?retryWrites=true&w=majority&appName=Project-cluster
-//tymur - wc6Lk5KfOhWcofmt
 
-//vitalii-
+//tymur - wc6Lk5KfOhWcofmt

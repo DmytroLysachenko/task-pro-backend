@@ -18,10 +18,8 @@ const createColumn = async (req: Request, res: Response) => {
 const updateColumn = async (req: Request, res: Response) => {
   const body = req.body;
   const { id: _id } = req.params;
-  console.log(_id);
 
   const data = await columnServices.updateColumn({ _id }, body);
-  console.log(data);
 
   res.status(200).json({
     status: 200,
