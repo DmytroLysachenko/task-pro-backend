@@ -30,6 +30,10 @@ export const authenticate: Controller = async (req, res, next) => {
 
     const { _id, username, email, avatarUrl, theme, isVerified } = user;
 
+    if (!user.isVerified) {
+      throw new HttpError(401, 'User is not verified');
+    }
+
     req.user = {
       _id,
       username,

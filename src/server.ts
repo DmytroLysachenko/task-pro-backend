@@ -7,7 +7,9 @@ import authRouter from './routes/authRouter';
 import columnRouter from './routes/columnRouter';
 import boardRouter from './routes/boardRouter';
 import HttpError from './helpers/HttpError';
+import path from 'node:path';
 
+const publicDirPath = path.resolve('src', 'public');
 dotenv.config();
 // Server setup
 
@@ -15,6 +17,7 @@ const startServer = async () => {
   const PORT = env('PORT');
   const app = express();
 
+  app.use(express.static(publicDirPath));
   app.use(morgan('tiny'));
   app.use(cors());
   app.use(express.json());
@@ -35,6 +38,7 @@ const startServer = async () => {
     if (err instanceof HttpError) {
       res.status(err.statusCode).json({ message: err.message });
     } else {
+      console.log(err);
       res.status(500).json({ message: 'An unexpected error occurred' });
     }
   });

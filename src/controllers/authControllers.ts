@@ -7,6 +7,8 @@ import { Controller } from '../types';
 import ctrlWrapper from '../decoratores/ctrlWrapper';
 import * as authServices from '../services/authServices';
 import { sendMail } from '../helpers/sendEmail';
+import cloudinary from '../helpers/cloudinary';
+import fs from 'node:fs/promises';
 
 const registerUser: Controller = async (req, res) => {
   const { username, email, password } = req.body;
@@ -123,6 +125,7 @@ const patchUser: Controller = async (req, res) => {
   let hashPassword;
   let verificationToken;
   let isVerified;
+  let avatarUrl;
 
   if (password) {
     hashPassword = await bcrypt.hash(password, 10);
@@ -149,19 +152,33 @@ const patchUser: Controller = async (req, res) => {
     await sendMail(data);
   }
 
-  await authServices.updateUser(
+  if (req?.file?.path) {
+    try {
+      const { secure_url } = await cloudinary.uploader.upload(
+        req?.file?.path as string,
+        {
+          folder: 'avatars',
+        }
+      );
+      avatarUrl = secure_url;
+    } catch (error) {
+      await fs.unlink(req?.file?.path as string);
+      throw error;
+    }
+  }
+
+  const newUser = await authServices.updateUser(
     { _id },
     {
       username,
       email,
       password: hashPassword,
       theme,
+      avatarUrl,
       isVerified,
       verificationToken,
     }
   );
-
-  const newUser = await authServices.findUser({ _id });
 
   res.json({
     status: 200,
@@ -169,6 +186,7 @@ const patchUser: Controller = async (req, res) => {
       username: newUser?.username,
       email: newUser?.email,
       theme: newUser?.theme,
+      avatarUrl: newUser?.avatarUrl,
     },
   });
 };
