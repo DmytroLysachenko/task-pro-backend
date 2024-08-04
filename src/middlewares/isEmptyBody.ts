@@ -4,7 +4,7 @@ import HttpError from '../helpers/HttpError.js';
 
 const isEmptyBody = (req: Request, res: Response, next: NextFunction) => {
   if (!Object.keys(req.body).length) {
-    next(new HttpError(400, 'Body cannot be empty'));
+    return next(new HttpError(400, 'Body cannot be empty'));
   }
   next();
 };
