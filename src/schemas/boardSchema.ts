@@ -8,7 +8,7 @@ const boardSchema = Joi.object({
   icon: Joi.string()
     .valid(...boardIcons)
     .default('icon_1'),
-  backgroundImg: Joi.object().default({}),
+  backgroundImg: Joi.string().allow(null).default(null),
   columns: Joi.array().items(Joi.object()).default([]),
 });
 
@@ -17,7 +17,7 @@ const boardUpdateSchema = Joi.object({
   icon: Joi.string()
     .valid(...boardIcons)
     .optional(),
-  backgroundImg: Joi.object().optional(),
+  backgroundImg: Joi.string().allow(null).optional(),
   columns: Joi.array().items(Joi.object()).optional(),
 });
 
