@@ -2,6 +2,7 @@ import { Controller } from '../types';
 
 import ctrlWrapper from '../decorators/ctrlWrapper';
 import columnServices from '../services/columnServices';
+import HttpError from '../helpers/HttpError';
 
 const createColumn: Controller = async (req, res) => {
   const userId = req.user?._id;
@@ -29,6 +30,10 @@ const updateColumn: Controller = async (req, res) => {
   const { id: _id } = req.params;
 
   const data = await columnServices.updateColumn({ _id }, body);
+
+  if (!data) {
+    throw new HttpError(404, `Column with ${_id} not found`);
+  }
 
   res.status(200).json({
     status: 200,
