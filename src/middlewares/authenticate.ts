@@ -30,6 +30,10 @@ export const authenticate: Controller = async (req, res, next) => {
 
     const { _id, username, email, avatarUrl, theme, isVerified } = user;
 
+    if (!user.isVerified) {
+      throw new HttpError(401, 'User is not verified');
+    }
+
     req.user = {
       _id,
       username,
@@ -40,7 +44,11 @@ export const authenticate: Controller = async (req, res, next) => {
     };
 
     next();
-  } catch (error: any) {
-    next(new HttpError(401, error?.message));
+  } catch (error) {
+    if (error instanceof Error) {
+      next(new HttpError(401, error.message));
+    } else {
+      next(error);
+    }
   }
 };
