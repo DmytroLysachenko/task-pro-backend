@@ -11,6 +11,7 @@ const boardSchema = new Schema(
     },
     userId: {
       type: Types.ObjectId,
+      ref: 'user',
     },
     title: {
       type: String,
