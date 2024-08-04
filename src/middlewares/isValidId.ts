@@ -4,15 +4,19 @@ import { NextFunction, Request, Response } from 'express';
 import HttpError from '../helpers/HttpError';
 
 const isValidId = (req: Request, res: Response, next: NextFunction) => {
-  const { id, userId, boardId, columnId, taskId } = req.params;
+  const {
+    id: requestedResourseId,
+    userId,
+    boardId,
+    columnId,
+    taskId,
+  } = req.params;
 
-  const ids = [id, userId, boardId, columnId, taskId].filter(
-    (id) => id !== undefined
-  );
+  const ids = { requestedResourseId, userId, boardId, columnId, taskId };
 
-  for (const id of ids) {
-    if (!isValidObjectId(id)) {
-      next(new HttpError(404, `${id} is not a valid id`));
+  for (const [key, value] of Object.entries(ids)) {
+    if (value && !isValidObjectId(value)) {
+      next(new HttpError(404, `${key} ${value} is not a valid id`));
       return;
     }
   }
