@@ -9,6 +9,7 @@ import * as authServices from '../services/authServices';
 import { sendMail } from '../helpers/sendEmail';
 import cloudinary from '../helpers/cloudinary';
 import fs from 'node:fs/promises';
+import path from 'node:path';
 
 const registerUser: Controller = async (req, res) => {
   const { username, email, password } = req.body;
@@ -205,9 +206,36 @@ export const verifyUser: Controller = async (req, res, next) => {
     { verificationToken },
     { verificationToken: 'User verified', isVerified: true }
   );
+  const root = path.resolve('src', 'constants');
+  res.sendFile('htmlPage.html', { root });
+};
+
+const resendVerifyMessage: Controller = async (req, res, next) => {
+  const { email } = req.body;
+  const user = await authServices.findUser({
+    email,
+  });
+
+  if (!user) {
+    throw new HttpError(400, 'Invalid verification token');
+  }
+  if (user.isVerified) {
+    throw new HttpError(400, 'Verification has already been passed');
+  }
+  const verificationToken = nanoid(12);
+  await authServices.updateUser({ email }, { verificationToken });
+  const BASE_URL = env('BASE_URL');
+  const data = {
+    to: email,
+    subject: 'Confirm your registration in Contact List app',
+    text: 'Press on the link to confirm your email',
+    html: `Good day! Please click on the following link to confirm your account in Contact List app. <a href="${BASE_URL}/users/verify/${verificationToken}" target="_blank" rel="noopener noreferrer">Confirm my mail</a>`,
+  };
+  await sendMail(data);
+
   res.json({
     status: 200,
-    message: 'Verification successful',
+    message: 'New verification email sent',
   });
 };
 
@@ -218,4 +246,5 @@ export default {
   verifyUser: ctrlWrapper(verifyUser),
   getCurrentUser: ctrlWrapper(getCurrentUser),
   patchUser: ctrlWrapper(patchUser),
+  resendVerifyMessage: ctrlWrapper(resendVerifyMessage),
 };

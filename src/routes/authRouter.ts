@@ -4,6 +4,7 @@ import {
   loginSchema,
   patchSchema,
   registerSchema,
+  resendVerifyMessageSchema,
 } from '../schemas/authSchemas';
 import authControllers from '../controllers/authControllers';
 import { authenticate } from '../middlewares/authenticate';
@@ -31,19 +32,12 @@ authRouter.patch(
   authControllers.patchUser
 );
 
-// authRouter.patch(
-//   '/avatar',
-//   upload.single('avatar'),
-//   authenticate,
-//   patchAvatarUser
-// );
-
 authRouter.get('/verify/:verificationToken', authControllers.verifyUser);
 
-// authRouter.post(
-//   '/verify',
-//   validateBody(resendVerifyMessageSchema),
-//   resendVerifyMessage
-// );
+authRouter.post(
+  '/verify',
+  validateBody(resendVerifyMessageSchema),
+  authControllers.resendVerifyMessage
+);
 
 export default authRouter;

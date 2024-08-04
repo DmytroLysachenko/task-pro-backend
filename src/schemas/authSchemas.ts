@@ -17,3 +17,7 @@ export const patchSchema = Joi.object().keys({
   password: Joi.string().min(8).max(16),
   theme: Joi.string().valid('light', 'dark', 'violet'),
 });
+
+export const resendVerifyMessageSchema = Joi.object().keys({
+  email: Joi.string().required().email(),
+});
