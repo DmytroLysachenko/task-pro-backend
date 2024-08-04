@@ -20,8 +20,12 @@ export interface CustomErrorType extends Error {
 const HttpError = (
   res: Response,
   status: number = 500,
-  message: string = messageList[status]
+  originalMessage: string = messageList[status]
 ) => {
+  const message =
+    originalMessage.replace(/"/g, '').charAt(0).toUpperCase() +
+    originalMessage.replace(/"/g, '').slice(1);
+
   res.status(status).json({ message });
 };
 
