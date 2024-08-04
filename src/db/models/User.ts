@@ -2,6 +2,8 @@ import { Document, Schema, model } from 'mongoose';
 
 import { IUser } from '../../types';
 
+import { mongoSaveError, setMongoUpdateSettings } from './hooks';
+
 const userSchema = new Schema(
   {
     username: {
@@ -45,6 +47,12 @@ const userSchema = new Schema(
   },
   { versionKey: false, timestamps: true }
 );
+
+userSchema.post('save', mongoSaveError);
+
+userSchema.pre('findOneAndUpdate', setMongoUpdateSettings);
+
+userSchema.post('findOneAndUpdate', mongoSaveError);
 
 const User = model<IUser>('user', userSchema);
 
