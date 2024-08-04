@@ -7,6 +7,7 @@ import {
 } from '../schemas/authSchemas';
 import authControllers from '../controllers/authControllers';
 import { authenticate } from '../middlewares/authenticate';
+import upload from '../middlewares/upload';
 
 const authRouter = express.Router();
 
@@ -24,6 +25,7 @@ authRouter.get('/current', authenticate, authControllers.getCurrentUser);
 
 authRouter.patch(
   '/update',
+  upload.single('avatar'),
   authenticate,
   validateBody(patchSchema),
   authControllers.patchUser
