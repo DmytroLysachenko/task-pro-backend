@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 import { env } from '../helpers/env';
 import jwt from 'jsonwebtoken';
 import { Controller } from '../types';
-import ctrlWrapper from '../decoratores/ctrlWrapper';
+import ctrlWrapper from '../decorators/ctrlWrapper';
 import * as authServices from '../services/authServices';
 import { sendMail } from '../helpers/sendEmail';
 import cloudinary from '../helpers/cloudinary';

@@ -3,6 +3,7 @@ import { Types, Schema, model } from 'mongoose';
 import { IBoard } from '../../types';
 
 import boardIcons from '../../constants/boardIcons';
+import { mongoSaveError, setMongoUpdateSettings } from './hooks';
 
 const boardSchema = new Schema(
   {
@@ -32,6 +33,12 @@ const boardSchema = new Schema(
   },
   { versionKey: false, timestamps: true }
 );
+
+boardSchema.post('save', mongoSaveError);
+
+boardSchema.pre('findOneAndUpdate', setMongoUpdateSettings);
+
+boardSchema.post('findOneAndUpdate', mongoSaveError);
 
 const Board = model<IBoard>('board', boardSchema);
 

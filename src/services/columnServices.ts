@@ -15,7 +15,7 @@ const createColumn = async (body: IColumnBody) => {
 };
 
 const updateColumn = async (filter: IFilter, body: IColumnBody) => {
-  return await Column.findOneAndUpdate(filter, body, { new: true });
+  return await Column.findOneAndUpdate(filter, body);
 };
 
 const deleteColumn = async (filter: IFilter, boardId: string) => {

@@ -1,8 +1,9 @@
-import { Types, Document, Schema, model } from 'mongoose';
+import { Types, Schema, model } from 'mongoose';
 
 import { ITask } from '../../types';
 
 import taskPriorityLabels from '../../constants/taskPriorityLabels';
+import { mongoSaveError, setMongoUpdateSettings } from './hooks';
 
 const taskSchema = new Schema(
   {
@@ -38,6 +39,12 @@ const taskSchema = new Schema(
   },
   { versionKey: false, timestamps: true }
 );
+
+taskSchema.post('save', mongoSaveError);
+
+taskSchema.pre('findOneAndUpdate', setMongoUpdateSettings);
+
+taskSchema.post('findOneAndUpdate', mongoSaveError);
 
 const Task = model<ITask>('task', taskSchema);
 
