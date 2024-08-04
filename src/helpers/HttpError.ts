@@ -10,6 +10,7 @@ const messageList: messageList = {
   [403]: 'Forbidden',
   [404]: 'Not Found',
   [409]: 'Conflict',
+  [500]: 'Internal server error',
 };
 
 export interface CustomErrorType extends Error {
@@ -18,7 +19,7 @@ export interface CustomErrorType extends Error {
 
 const HttpError = (
   res: Response,
-  status: number,
+  status: number = 500,
   message: string = messageList[status]
 ) => {
   res.status(status).json({ message });

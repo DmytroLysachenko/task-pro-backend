@@ -1,13 +1,26 @@
 import express from 'express';
 
 import columnCtrl from '../controllers/columnControllers';
+import { authenticate } from '../middlewares/authenticate';
 
 const columnRouter = express.Router();
 
-columnRouter.post('/', columnCtrl.createColumn);
+columnRouter.post(
+  '/boards/:boardId/columns',
+  authenticate,
+  columnCtrl.createColumn
+);
 
-columnRouter.patch('/:id', columnCtrl.updateColumn);
+columnRouter.patch(
+  '/boards/:boardId/columns/:id',
+  authenticate,
+  columnCtrl.updateColumn
+);
 
-columnRouter.delete('/:id', columnCtrl.deleteColumn);
+columnRouter.delete(
+  '/boards/:boardId/columns/:id',
+  authenticate,
+  columnCtrl.deleteColumn
+);
 
 export default columnRouter;

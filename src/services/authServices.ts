@@ -1,12 +1,9 @@
 import User from '../db/models/User';
-import { FindOneUserType, PatchUserDataType } from '../types';
-
-interface RegisterPropsType {
-  username: string;
-  email: string;
-  password: string;
-  verificationToken: string;
-}
+import {
+  FindOneUserType,
+  PatchUserDataType,
+  RegisterPropsType,
+} from '../types';
 
 export async function registerUser({
   username,

@@ -1,10 +1,18 @@
-import { Request, Response } from 'express';
-
-import ctrlWrapper from '../helpers/ctrlWrapper';
+import ctrlWrapper from '../decoratores/ctrlWrapper';
 import columnServices from '../services/columnServices';
+import { Controller } from '../types';
 
-const createColumn = async (req: Request, res: Response) => {
-  const body = req.body;
+const createColumn: Controller = async (req, res) => {
+  const userId = req.user?._id;
+
+  const { boardId } = req.params;
+
+  const { body } = req;
+
+  body.userId = userId;
+  body.boardId = boardId;
+
+  console.log(body);
 
   const data = await columnServices.createColumn(body);
 
@@ -15,7 +23,7 @@ const createColumn = async (req: Request, res: Response) => {
   });
 };
 
-const updateColumn = async (req: Request, res: Response) => {
+const updateColumn: Controller = async (req, res) => {
   const body = req.body;
   const { id: _id } = req.params;
 
@@ -28,10 +36,10 @@ const updateColumn = async (req: Request, res: Response) => {
   });
 };
 
-const deleteColumn = async (req: Request, res: Response) => {
-  const { id: _id } = req.params;
+const deleteColumn: Controller = async (req, res) => {
+  const { id: _id, boardId } = req.params;
 
-  await columnServices.deleteColumn({ _id });
+  await columnServices.deleteColumn({ _id }, boardId);
 
   res.status(204).json();
 };

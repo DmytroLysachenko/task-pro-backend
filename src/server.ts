@@ -18,11 +18,13 @@ const startServer = async () => {
   app.use(cors());
   app.use(express.json());
 
-  app.use('/auth', authRouter);
-  app.use('/board', boardRouter);
-  //app.post('/:id', postBoardController)
-  app.use('/:boardId/column', columnRouter);
-  //  app.use('/task', taskRouter);
+  app.use('/api/auth', authRouter);
+
+  app.use('/api/boards-management', boardRouter);
+
+  app.use('/api/columns-management', columnRouter);
+
+  // app.use('/api/tasks-management', taskRouter); inside task router ==> /boards/:boardId/columns/:columnId/tasks
 
   app.use((_, res) => {
     res.status(404).json({ message: 'Route not found' });

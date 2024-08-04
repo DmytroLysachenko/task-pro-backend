@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 import { env } from '../helpers/env';
 import jwt from 'jsonwebtoken';
 import { Controller } from '../types';
-import ctrlWrapper from '../helpers/ctrlWrapper';
+import ctrlWrapper from '../decoratores/ctrlWrapper';
 import * as authServices from '../services/authServices';
 import { sendMail } from '../helpers/sendEmail';
 
@@ -70,7 +70,7 @@ const loginUser: Controller = async (req, res) => {
   const { _id } = user;
   const payload = { id: _id };
 
-  const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '15m' });
+  const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
   const refreshToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
 
   const updUser = await authServices.updateUser(
@@ -196,6 +196,7 @@ export const verifyUser: Controller = async (req, res) => {
     message: 'Verification successful',
   });
 };
+
 export default {
   registerUser: ctrlWrapper(registerUser),
   loginUser: ctrlWrapper(loginUser),

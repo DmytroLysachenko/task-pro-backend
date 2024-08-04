@@ -27,7 +27,7 @@ const boardSchema = new Schema(
     },
     columns: {
       type: Array,
-      ref: 'Column',
+      ref: 'column',
       default: [],
     },
   },

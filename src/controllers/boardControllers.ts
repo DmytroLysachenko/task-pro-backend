@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import HttpError from '../helpers/HttpError';
-import ctrlWrapper from '../helpers/ctrlWrapper';
+import ctrlWrapper from '../decoratores/ctrlWrapper';
 import { Controller, RequestWithUser } from '../types/index';
 import {
   getBoardsService,

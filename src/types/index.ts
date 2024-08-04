@@ -47,6 +47,13 @@ export interface FindOneUserType {
   refreshToken?: string | null;
 }
 
+export interface RegisterPropsType {
+  username: string;
+  email: string;
+  password: string;
+  verificationToken: string;
+}
+
 // Models Types
 
 export interface IBoard extends Document {

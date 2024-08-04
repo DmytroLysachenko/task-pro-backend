@@ -2,7 +2,7 @@ import Board from '../db/models/Board';
 import { IBoard } from '../types';
 
 export const getBoardsService = async (userId: string): Promise<IBoard[]> => {
-  return await Board.find({ userId });
+  return await Board.find({ userId }).populate('columns');
 };
 
 export const createBoardService = async (

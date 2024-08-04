@@ -9,9 +9,11 @@ const columnSchema = new Schema(
     },
     boardId: {
       type: Types.ObjectId,
+      // required: [true, 'boardId must exists'],
     },
     userId: {
       type: Types.ObjectId,
+      // required: [true, 'userId must exists'],
     },
     title: {
       type: String,
