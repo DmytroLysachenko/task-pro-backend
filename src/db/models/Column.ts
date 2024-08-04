@@ -4,16 +4,13 @@ import { IColumn } from '../../types';
 
 const columnSchema = new Schema(
   {
-    columnId: {
-      type: Types.ObjectId,
-    },
     boardId: {
       type: Types.ObjectId,
-      // required: [true, 'boardId must exists'],
+      required: [true, 'Board id must exists'],
     },
     userId: {
       type: Types.ObjectId,
-      // required: [true, 'userId must exists'],
+      required: [true, 'User id must exists'],
     },
     title: {
       type: String,

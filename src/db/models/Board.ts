@@ -6,11 +6,9 @@ import boardIcons from '../../constants/boardIcons';
 
 const boardSchema = new Schema(
   {
-    boardId: {
-      type: Types.ObjectId,
-    },
     userId: {
       type: Types.ObjectId,
+      required: [true, 'User id must exists'],
       ref: 'user',
     },
     title: {

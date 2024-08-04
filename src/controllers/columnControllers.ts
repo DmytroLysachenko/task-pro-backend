@@ -1,6 +1,7 @@
+import { Controller } from '../types';
+
 import ctrlWrapper from '../decoratores/ctrlWrapper';
 import columnServices from '../services/columnServices';
-import { Controller } from '../types';
 
 const createColumn: Controller = async (req, res) => {
   const userId = req.user?._id;
