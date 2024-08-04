@@ -1,11 +1,12 @@
 import morgan from 'morgan';
 import cors from 'cors';
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { env } from './helpers/env';
 import authRouter from './routes/authRouter';
 import columnRouter from './routes/columnRouter';
 import boardRouter from './routes/boardRouter';
+import HttpError from './helpers/HttpError';
 
 dotenv.config();
 // Server setup
@@ -28,6 +29,14 @@ const startServer = async () => {
 
   app.use((_, res) => {
     res.status(404).json({ message: 'Route not found' });
+  });
+
+  app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
+    if (err instanceof HttpError) {
+      res.status(err.statusCode).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: 'An unexpected error occurred' });
+    }
   });
 
   app.listen(PORT, () => {

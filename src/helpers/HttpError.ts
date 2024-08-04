@@ -1,32 +1,18 @@
-import { Response } from 'express';
+class HttpError extends Error {
+  public statusCode: number;
 
-interface messageList {
-  [n: number]: string;
-}
-
-const messageList: messageList = {
-  [400]: 'Bad Request',
-  [401]: 'Unauthorized',
-  [403]: 'Forbidden',
-  [404]: 'Not Found',
-  [409]: 'Conflict',
-  [500]: 'Internal server error',
-};
-
-export interface CustomErrorType extends Error {
-  status: number;
-}
-
-const HttpError = (
-  res: Response,
-  status: number = 500,
-  originalMessage: string = messageList[status]
-) => {
-  const message =
+  constructor(statusCode: number, originalMessage: string) {
+    
+    const message =
     originalMessage.replace(/"/g, '').charAt(0).toUpperCase() +
     originalMessage.replace(/"/g, '').slice(1);
+    
+    super(message);
+    this.statusCode = statusCode;
+    this.name = 'HttpError'; // Optional: gives a specific name to the error
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
 
-  res.status(status).json({ message });
-};
 
 export default HttpError;

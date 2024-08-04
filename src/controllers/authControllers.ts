@@ -13,7 +13,7 @@ const registerUser: Controller = async (req, res) => {
   const user = await authServices.findUser({ email });
 
   if (user) {
-    return HttpError(res, 409, 'Email already in use');
+    throw new HttpError(409, 'Email already in use');
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
@@ -51,12 +51,11 @@ const loginUser: Controller = async (req, res) => {
   const { email, password } = req.body;
   const user = await authServices.findUser({ email });
   if (!user) {
-    return HttpError(res, 401, 'Email or password invalid');
+    throw new HttpError(401, 'Email or password invalid');
   }
 
   if (!user.isVerified) {
-    return HttpError(
-      res,
+    throw new HttpError(
       400,
       'User mail is not verified, please check your mail for following instructions'
     );
@@ -64,7 +63,7 @@ const loginUser: Controller = async (req, res) => {
 
   const passwordCompare = await bcrypt.compare(password, user.password);
   if (!passwordCompare) {
-    return HttpError(res, 401, 'Email or password invalid');
+    throw new HttpError(401, 'Email or password invalid');
   }
 
   const { _id } = user;
@@ -132,8 +131,7 @@ const patchUser: Controller = async (req, res) => {
   if (email) {
     const userWithNewMail = await authServices.findUser({ email });
     if (userWithNewMail) {
-      return HttpError(
-        res,
+      throw new HttpError(
         408,
         'Cannot change email to that which is already occupied.'
       );
@@ -175,17 +173,17 @@ const patchUser: Controller = async (req, res) => {
   });
 };
 
-export const verifyUser: Controller = async (req, res) => {
+export const verifyUser: Controller = async (req, res, next) => {
   const { verificationToken } = req.params;
 
   const user = await authServices.findUser({
     verificationToken,
   });
   if (!user) {
-    return HttpError(res, 400, 'Invalid verification token');
+    throw new HttpError(400, 'Invalid verification token');
   }
   if (user.isVerified) {
-    return HttpError(res, 400, 'Verification has already been passed');
+    throw new HttpError(400, 'Verification has already been passed');
   }
   await authServices.updateUser(
     { verificationToken },
