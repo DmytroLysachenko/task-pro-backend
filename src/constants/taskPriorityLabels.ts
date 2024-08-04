@@ -1,3 +1,3 @@
-const taskPriorityLabels = ['none', 'low', 'medium', 'high'];
+const taskPriorityLabels = ['', 'low', 'medium', 'high'];
 
 export default taskPriorityLabels;
