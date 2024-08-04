@@ -40,7 +40,11 @@ export const authenticate: Controller = async (req, res, next) => {
     };
 
     next();
-  } catch (error: any) {
-    next(new HttpError(401, error?.message));
+  } catch (error) {
+    if (error instanceof Error) {
+      next(new HttpError(401, error.message));
+    } else {
+      next(error);
+    }
   }
 };

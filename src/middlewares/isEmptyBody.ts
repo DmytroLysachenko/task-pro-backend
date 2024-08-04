@@ -3,10 +3,14 @@ import { NextFunction, Request, Response } from 'express';
 import HttpError from '../helpers/HttpError.js';
 
 const isEmptyBody = (req: Request, res: Response, next: NextFunction) => {
-  if (!Object.keys(req.body).length) {
-    return HttpError(res, 400, 'Body cannot be empty');
+  try {
+    if (!Object.keys(req.body).length) {
+      throw new HttpError(400, 'Body cannot be empty');
+    }
+    next();
+  } catch (error) {
+    next(error);
   }
-  next();
 };
 
 export default isEmptyBody;
