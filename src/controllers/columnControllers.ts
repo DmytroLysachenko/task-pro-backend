@@ -1,6 +1,6 @@
 import { Controller } from '../types';
 
-import ctrlWrapper from '../decoratores/ctrlWrapper';
+import ctrlWrapper from '../decorators/ctrlWrapper';
 import columnServices from '../services/columnServices';
 
 const createColumn: Controller = async (req, res) => {

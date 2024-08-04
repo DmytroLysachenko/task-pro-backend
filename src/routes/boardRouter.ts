@@ -14,11 +14,11 @@ router.post(
   boardController.createBoard
 );
 router.patch(
-  '/:boardid',
+  '/:boardId',
   validateBody(boardUpdateSchema),
   authenticate,
   boardController.updateBoard
 );
-router.delete('/:boardid', authenticate, boardController.deleteBoard);
+router.delete('/:boardId', authenticate, boardController.deleteBoard);
 
 export default router;
