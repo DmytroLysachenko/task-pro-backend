@@ -61,7 +61,11 @@ export interface IBoard extends Document {
   userId: Types.ObjectId;
   title: string;
   icon: string;
-  backgroundImg: object;
+  backgroundImg: {
+    mobile?: string;
+    tablet?: string;
+    desktop?: string;
+  } | null;
   columns: object[];
 }
 
