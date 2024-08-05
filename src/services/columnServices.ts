@@ -8,7 +8,7 @@ import HttpError from '../helpers/HttpError';
 const createColumn = async (body: IColumnBody) => {
   const { boardId } = body;
 
-  const board = await Board.findOne({ boardId });
+  const board = await Board.findOne({ _id: boardId });
 
   if (!board) {
     throw new HttpError(400, `Board with id:${boardId} does not exist`);

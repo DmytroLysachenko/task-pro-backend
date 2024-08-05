@@ -4,10 +4,6 @@ import Task from '../db/models/Task';
 import Column from '../db/models/Column';
 
 const createTask = async (body: any) => {
-  //find board(_id:boardId, userId)
-
-  //find column(_id:columnId, userId, boardId)
-
   const newTask = await Task.create(body);
 
   const { _id } = newTask;
@@ -24,11 +20,6 @@ const updateTask = async (filter: IFilter, body: any) => {
 
 const deleteTask = async (filter: IFilter, columnId: string) => {
   const deletedTask = await Task.findByIdAndDelete(filter);
-
-  await Column.findByIdAndUpdate(
-    { _id: columnId },
-    { $pull: { tasks: filter } }
-  );
 
   return deletedTask;
 };

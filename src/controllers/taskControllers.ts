@@ -1,14 +1,39 @@
+import mongoose from 'mongoose';
+
 import { Controller } from '../types';
 
+import Board from '../db/models/Board';
+import Column from '../db/models/Column';
+import HttpError from '../helpers/HttpError';
 import ctrlWrapper from '../decorators/ctrlWrapper';
 import taskServices from '../services/taskServices';
-import HttpError from '../helpers/HttpError';
 
 const createTask: Controller = async (req, res) => {
   const userId = req.user?._id;
   const { body } = req;
-  const { boardId } = req.params;
-  const { columnId } = req.params;
+  const { boardId, columnId } = req.params;
+
+  const board = await Board.findOne({ _id: boardId });
+  if (!board) {
+    throw new HttpError(404, `Board with id:${boardId} not found`);
+  }
+  if (userId?.toString() !== board.userId.toString()) {
+    throw new HttpError(
+      401,
+      `Board id:${boardId} does not belong to this user`
+    );
+  }
+
+  const column = await Column.findOne({ _id: columnId });
+  if (!column) {
+    throw new HttpError(404, `Column with id:${columnId} not found`);
+  }
+  if (userId?.toString() !== column.userId.toString()) {
+    throw new HttpError(
+      401,
+      `Column id:${columnId} does not belong to this user`
+    );
+  }
 
   body.userId = userId;
   body.boardId = boardId;
@@ -24,14 +49,49 @@ const createTask: Controller = async (req, res) => {
 };
 
 const updateTask: Controller = async (req, res) => {
-  const body = req.body;
-  const { taskId: _id } = req.params;
+  const userId = req.user?._id;
+  const { body } = req;
+  const { taskId, boardId, columnId } = req.params;
+  const { columnId: newColumnId } = req.body;
 
-  const data = await taskServices.updateTask({ _id }, body);
-
-  if (!data) {
-    throw new HttpError(404, `Task with id:${_id} not found`);
+  const board = await Board.findOne({ _id: boardId });
+  if (!board) {
+    throw new HttpError(404, `Board with id:${boardId} not found`);
   }
+  if (userId?.toString() !== board.userId.toString()) {
+    throw new HttpError(
+      401,
+      `Board id:${boardId} does not belong to this user`
+    );
+  }
+
+  const column = await Column.findOne({ _id: columnId });
+  if (!column) {
+    throw new HttpError(404, `Column with id:${columnId} not found`);
+  }
+  if (userId?.toString() !== column.userId.toString()) {
+    throw new HttpError(
+      401,
+      `Column id:${columnId} does not belong to this user`
+    );
+  }
+
+  const data = await taskServices.updateTask({ _id: taskId }, body);
+  if (!data) {
+    throw new HttpError(404, `Task with id:${taskId} not found`);
+  }
+
+  //console.log(newColumnId, columnId);
+
+  await Column.findOneAndUpdate(
+    { _id: newColumnId },
+    { $push: { tasks: taskId } }
+  );
+
+  await Column.findOneAndUpdate(
+    { _id: columnId },
+    { $pull: { tasks: taskId } }
+  );
 
   res.status(200).json({
     status: 200,
@@ -41,12 +101,34 @@ const updateTask: Controller = async (req, res) => {
 };
 
 const deleteTask: Controller = async (req, res) => {
-  const { taskId: _id, columnId } = req.params;
+  const userId = req.user?._id;
+  const { taskId, columnId, boardId } = req.params;
 
-  const data = await taskServices.deleteTask({ _id }, columnId);
+  const board = await Board.findOne({ _id: boardId });
+  if (!board) {
+    throw new HttpError(404, `Board with id:${boardId} not found`);
+  }
+  if (userId?.toString() !== board.userId.toString()) {
+    throw new HttpError(
+      401,
+      `Board id:${boardId} does not belong to this user`
+    );
+  }
 
+  const column = await Column.findOne({ _id: columnId });
+  if (!column) {
+    throw new HttpError(404, `Column with id:${columnId} not found`);
+  }
+  if (userId?.toString() !== column.userId.toString()) {
+    throw new HttpError(
+      401,
+      `Column id:${columnId} does not belong to this user`
+    );
+  }
+
+  const data = await taskServices.deleteTask({ _id: taskId }, columnId);
   if (!data) {
-    throw new HttpError(404, `Task with id:${_id} not found`);
+    throw new HttpError(404, `Task with id:${taskId} not found`);
   }
 
   res.status(204).json();

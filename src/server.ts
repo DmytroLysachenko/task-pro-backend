@@ -13,8 +13,8 @@ import swaggerUi from 'swagger-ui-express';
 import taskRouter from './routes/taskRouter';
 
 const publicDirPath = path.resolve('src', 'public');
+
 dotenv.config();
-// Server setup
 
 const startServer = async () => {
   const PORT = env('PORT');
@@ -53,8 +53,3 @@ const startServer = async () => {
 };
 
 export default startServer;
-
-// dmytro - RGih9kttVPr8OsXj
-// mongodb+srv://dmytro:RGih9kttVPr8OsXj@project-cluster.9biwlje.mongodb.net/task-pro-db?retryWrites=true&w=majority&appName=Project-cluster
-
-//tymur - wc6Lk5KfOhWcofmt
