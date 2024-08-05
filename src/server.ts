@@ -8,6 +8,8 @@ import columnRouter from './routes/columnRouter';
 import boardRouter from './routes/boardRouter';
 import HttpError from './helpers/HttpError';
 import path from 'node:path';
+import swaggerSpec from './helpers/swagger';
+import swaggerUi from 'swagger-ui-express';
 
 const publicDirPath = path.resolve('src', 'public');
 dotenv.config();
@@ -21,6 +23,7 @@ const startServer = async () => {
   app.use(morgan('tiny'));
   app.use(cors());
   app.use(express.json());
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
   app.use('/api/auth', authRouter);
 
