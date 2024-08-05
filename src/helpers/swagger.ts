@@ -147,6 +147,4 @@ const swaggerOptions = {
 };
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
-console.log(swaggerSpec);
-
 export default swaggerSpec;
