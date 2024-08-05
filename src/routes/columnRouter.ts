@@ -3,6 +3,7 @@ import express from 'express';
 import columnCtrl from '../controllers/columnControllers';
 import validateBody from '../helpers/validateBody';
 import isEmptyBody from '../middlewares/isEmptyBody';
+import isValidId from '../middlewares/isValidId';
 import { authenticate } from '../middlewares/authenticate';
 import {
   createColumnSchema,
@@ -15,6 +16,7 @@ columnRouter.post(
   '/boards/:boardId/columns',
   authenticate,
   isEmptyBody,
+  isValidId,
   validateBody(createColumnSchema),
   columnCtrl.createColumn
 );
@@ -23,6 +25,7 @@ columnRouter.patch(
   '/boards/:boardId/columns/:id',
   authenticate,
   isEmptyBody,
+  isValidId,
   validateBody(updateColumnSchema),
 
   columnCtrl.updateColumn
@@ -31,6 +34,7 @@ columnRouter.patch(
 columnRouter.delete(
   '/boards/:boardId/columns/:id',
   authenticate,
+  isValidId,
   columnCtrl.deleteColumn
 );
 

@@ -8,8 +8,11 @@ import columnRouter from './routes/columnRouter';
 import boardRouter from './routes/boardRouter';
 import HttpError from './helpers/HttpError';
 import path from 'node:path';
+
 import swaggerSpec from './helpers/swagger';
 import swaggerUi from 'swagger-ui-express';
+
+import taskRouter from './routes/taskRouter';
 
 const publicDirPath = path.resolve('src', 'public');
 dotenv.config();
@@ -31,7 +34,7 @@ const startServer = async () => {
 
   app.use('/api/columns-management', columnRouter);
 
-  // app.use('/api/tasks-management', taskRouter); inside task router ==> /boards/:boardId/columns/:columnId/tasks
+  app.use('/api/tasks-management', taskRouter);
 
   app.use((_, res) => {
     res.status(404).json({ message: 'Route not found' });
