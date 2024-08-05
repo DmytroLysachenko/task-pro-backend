@@ -102,6 +102,9 @@ export interface IUser extends Document {
 
 export interface IFilter {
   _id: string;
+  userId?: string;
+  boardId?: string;
+  columnId?: string;
 }
 
 export interface IColumnBody extends Partial<IColumn> {}

@@ -4,6 +4,10 @@ import Task from '../db/models/Task';
 import Column from '../db/models/Column';
 
 const createTask = async (body: any) => {
+  //find board(_id:boardId, userId)
+
+  //find column(_id:columnId, userId, boardId)
+
   const newTask = await Task.create(body);
 
   const { _id } = newTask;

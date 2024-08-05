@@ -29,7 +29,7 @@ const router = Router();
  *         description: Unauthorized
  */
 
-router.get('/', authenticate, boardController.getBoards);
+router.get('/boards', authenticate, boardController.getBoards);
 
 /**
  * @openapi
@@ -60,7 +60,7 @@ router.get('/', authenticate, boardController.getBoards);
  */
 
 router.post(
-  '/',
+  '/boards',
   validateBody(boardSchema),
   authenticate,
   backgroundConvert,
@@ -104,7 +104,7 @@ router.post(
  */
 
 router.patch(
-  '/:boardId',
+  '/boards/:boardId',
   validateBody(boardUpdateSchema),
   authenticate,
   backgroundConvert,
@@ -136,6 +136,6 @@ router.patch(
  *         description: Board not found
  */
 
-router.delete('/:boardId', authenticate, boardController.deleteBoard);
+router.delete('/boards/:boardId', authenticate, boardController.deleteBoard);
 
 export default router;

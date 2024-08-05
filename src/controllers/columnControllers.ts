@@ -23,9 +23,14 @@ const createColumn: Controller = async (req, res) => {
 
 const updateColumn: Controller = async (req, res, next) => {
   const body = req.body;
-  const { id: _id } = req.params;
+  const userId = req.user?._id as string;
 
-  const data = await columnServices.updateColumn({ _id }, body);
+  const { id: _id, boardId } = req.params;
+
+  const data = await columnServices.updateColumn(
+    { _id, boardId, userId },
+    body
+  );
 
   if (!data) {
     throw new HttpError(404, `Column with id:${_id} not found`);
