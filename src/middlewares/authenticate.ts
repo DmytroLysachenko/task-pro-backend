@@ -7,7 +7,7 @@ import { Controller } from '../types';
 export const authenticate: Controller = async (req, res, next) => {
   try {
     const { authorization } = req.headers;
-    const JWT_SECRET = env('JWT_SECRET');
+    const ACCESS_JWT_SECRET = env('ACCESS_JWT_SECRET');
 
     if (!authorization) {
       throw new HttpError(401, `Authorization header not found`);
@@ -17,7 +17,7 @@ export const authenticate: Controller = async (req, res, next) => {
     if (bearer !== 'Bearer') {
       throw new HttpError(401, 'Bearer not found');
     }
-    const { id } = jwt.verify(token, JWT_SECRET) as jwt.JwtPayload;
+    const { id } = jwt.verify(token, ACCESS_JWT_SECRET) as jwt.JwtPayload;
 
     const user = await findUser({ _id: id });
     if (!user) {

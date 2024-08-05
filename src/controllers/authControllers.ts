@@ -9,6 +9,7 @@ import * as authServices from '../services/authServices';
 import { sendMail } from '../helpers/sendEmail';
 import cloudinary from '../helpers/cloudinary';
 import fs from 'node:fs/promises';
+import path from 'node:path';
 
 const registerUser: Controller = async (req, res) => {
   const { username, email, password } = req.body;
@@ -49,7 +50,8 @@ const registerUser: Controller = async (req, res) => {
 };
 
 const loginUser: Controller = async (req, res) => {
-  const JWT_SECRET = env('JWT_SECRET');
+  const ACCESS_JWT_SECRET = env('ACCESS_JWT_SECRET');
+  const REFRESH_JWT_SECRET = env('REFRESH_JWT_SECRET');
   const { email, password } = req.body;
   const user = await authServices.findUser({ email });
   if (!user) {
@@ -71,8 +73,10 @@ const loginUser: Controller = async (req, res) => {
   const { _id } = user;
   const payload = { id: _id };
 
-  const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
-  const refreshToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
+  const accessToken = jwt.sign(payload, ACCESS_JWT_SECRET, { expiresIn: '7d' });
+  const refreshToken = jwt.sign(payload, REFRESH_JWT_SECRET, {
+    expiresIn: '7d',
+  });
 
   const updUser = await authServices.updateUser(
     { _id },
@@ -189,7 +193,7 @@ const patchUser: Controller = async (req, res) => {
   });
 };
 
-export const verifyUser: Controller = async (req, res, next) => {
+const verifyUser: Controller = async (req, res, next) => {
   const { verificationToken } = req.params;
 
   const user = await authServices.findUser({
@@ -205,9 +209,76 @@ export const verifyUser: Controller = async (req, res, next) => {
     { verificationToken },
     { verificationToken: 'User verified', isVerified: true }
   );
+  const root = path.resolve('src', 'constants');
+  res.sendFile('htmlPage.html', { root });
+};
+
+const resendVerifyMessage: Controller = async (req, res, next) => {
+  const { email } = req.body;
+  const user = await authServices.findUser({
+    email,
+  });
+
+  if (!user) {
+    throw new HttpError(400, 'Invalid verification token');
+  }
+  if (user.isVerified) {
+    throw new HttpError(400, 'Verification has already been passed');
+  }
+  const verificationToken = nanoid(12);
+  await authServices.updateUser({ email }, { verificationToken });
+  const BASE_URL = env('BASE_URL');
+  const data = {
+    to: email,
+    subject: 'Confirm your registration in Contact List app',
+    text: 'Press on the link to confirm your email',
+    html: `Good day! Please click on the following link to confirm your account in Contact List app. <a href="${BASE_URL}/users/verify/${verificationToken}" target="_blank" rel="noopener noreferrer">Confirm my mail</a>`,
+  };
+  await sendMail(data);
+
   res.json({
     status: 200,
-    message: 'Verification successful',
+    message: 'New verification email sent',
+  });
+};
+
+const refreshTokens: Controller = async (req, res, next) => {
+  const REFRESH_JWT_SECRET = env('REFRESH_JWT_SECRET');
+  const ACCESS_JWT_SECRET = env('ACCESS_JWT_SECRET');
+
+  const { refreshToken: oldRefreshToken } = req.body;
+
+  const { id } = jwt.verify(
+    oldRefreshToken,
+    REFRESH_JWT_SECRET
+  ) as jwt.JwtPayload;
+
+  const user = authServices.findUser({ _id: id });
+
+  if (!user) {
+    throw new HttpError(401, 'User not found');
+  }
+
+  const payload = { id };
+
+  const accessToken = jwt.sign(payload, ACCESS_JWT_SECRET, { expiresIn: '7d' });
+  const refreshToken = jwt.sign(payload, REFRESH_JWT_SECRET, {
+    expiresIn: '7d',
+  });
+
+  const newUser = await authServices.updateUser(
+    { _id: id },
+    { accessToken, refreshToken }
+  );
+
+  res.json({
+    status: 200,
+    data: {
+      username: newUser?.username,
+      email: newUser?.email,
+      accessToken: newUser?.accessToken,
+      refreshToken: newUser?.refreshToken,
+    },
   });
 };
 
@@ -218,4 +289,6 @@ export default {
   verifyUser: ctrlWrapper(verifyUser),
   getCurrentUser: ctrlWrapper(getCurrentUser),
   patchUser: ctrlWrapper(patchUser),
+  resendVerifyMessage: ctrlWrapper(resendVerifyMessage),
+  refreshTokens: ctrlWrapper(refreshTokens),
 };
