@@ -154,15 +154,13 @@ const patchUser: Controller = async (req, res) => {
 
   if (req?.file?.path) {
     try {
-      const { secure_url } = await cloudinary.uploader.upload(
-        req?.file?.path as string,
-        {
-          folder: 'avatars',
-        }
-      );
+      const { secure_url } = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'avatars',
+      });
       avatarUrl = secure_url;
+      await fs.unlink(req.file.path);
     } catch (error) {
-      await fs.unlink(req?.file?.path as string);
+      await fs.unlink(req.file.path);
       throw error;
     }
   }
