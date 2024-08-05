@@ -26,7 +26,11 @@ authRouter.post('/logout', authenticate, authControllers.logoutUser);
 
 authRouter.get('/current', authenticate, authControllers.getCurrentUser);
 
-authRouter.post('/refresh', validateBody(refreshTokenSchema));
+authRouter.post(
+  '/refresh',
+  validateBody(refreshTokenSchema),
+  authControllers.refreshTokens
+);
 
 authRouter.patch(
   '/update',

@@ -50,7 +50,8 @@ const registerUser: Controller = async (req, res) => {
 };
 
 const loginUser: Controller = async (req, res) => {
-  const JWT_SECRET = env('JWT_SECRET');
+  const ACCESS_JWT_SECRET = env('ACCESS_JWT_SECRET');
+  const REFRESH_JWT_SECRET = env('REFRESH_JWT_SECRET');
   const { email, password } = req.body;
   const user = await authServices.findUser({ email });
   if (!user) {
@@ -72,8 +73,10 @@ const loginUser: Controller = async (req, res) => {
   const { _id } = user;
   const payload = { id: _id };
 
-  const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
-  const refreshToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
+  const accessToken = jwt.sign(payload, ACCESS_JWT_SECRET, { expiresIn: '7d' });
+  const refreshToken = jwt.sign(payload, REFRESH_JWT_SECRET, {
+    expiresIn: '7d',
+  });
 
   const updUser = await authServices.updateUser(
     { _id },
@@ -190,7 +193,7 @@ const patchUser: Controller = async (req, res) => {
   });
 };
 
-export const verifyUser: Controller = async (req, res, next) => {
+const verifyUser: Controller = async (req, res, next) => {
   const { verificationToken } = req.params;
 
   const user = await authServices.findUser({
@@ -239,6 +242,46 @@ const resendVerifyMessage: Controller = async (req, res, next) => {
   });
 };
 
+const refreshTokens: Controller = async (req, res, next) => {
+  const REFRESH_JWT_SECRET = env('REFRESH_JWT_SECRET');
+  const ACCESS_JWT_SECRET = env('ACCESS_JWT_SECRET');
+
+  const { refreshToken: oldRefreshToken } = req.body;
+
+  const { id } = jwt.verify(
+    oldRefreshToken,
+    REFRESH_JWT_SECRET
+  ) as jwt.JwtPayload;
+
+  const user = authServices.findUser({ _id: id });
+
+  if (!user) {
+    throw new HttpError(401, 'User not found');
+  }
+
+  const payload = { id };
+
+  const accessToken = jwt.sign(payload, ACCESS_JWT_SECRET, { expiresIn: '7d' });
+  const refreshToken = jwt.sign(payload, REFRESH_JWT_SECRET, {
+    expiresIn: '7d',
+  });
+
+  const newUser = await authServices.updateUser(
+    { _id: id },
+    { accessToken, refreshToken }
+  );
+
+  res.json({
+    status: 200,
+    data: {
+      username: newUser?.username,
+      email: newUser?.email,
+      accessToken: newUser?.accessToken,
+      refreshToken: newUser?.refreshToken,
+    },
+  });
+};
+
 export default {
   registerUser: ctrlWrapper(registerUser),
   loginUser: ctrlWrapper(loginUser),
@@ -247,4 +290,5 @@ export default {
   getCurrentUser: ctrlWrapper(getCurrentUser),
   patchUser: ctrlWrapper(patchUser),
   resendVerifyMessage: ctrlWrapper(resendVerifyMessage),
+  refreshTokens: ctrlWrapper(refreshTokens),
 };
