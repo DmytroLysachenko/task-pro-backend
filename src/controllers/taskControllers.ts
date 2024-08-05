@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { Types } from 'mongoose';
 
 import { Controller } from '../types';
 
@@ -81,16 +82,15 @@ const updateTask: Controller = async (req, res) => {
     throw new HttpError(404, `Task with id:${taskId} not found`);
   }
 
-  //console.log(newColumnId, columnId);
+  const taskObjectId = new Types.ObjectId(taskId);
 
   await Column.findOneAndUpdate(
     { _id: newColumnId },
-    { $push: { tasks: taskId } }
+    { $push: { tasks: taskObjectId } }
   );
-
   await Column.findOneAndUpdate(
     { _id: columnId },
-    { $pull: { tasks: taskId } }
+    { $pull: { tasks: taskObjectId } }
   );
 
   res.status(200).json({
