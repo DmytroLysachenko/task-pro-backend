@@ -27,7 +27,6 @@ columnRouter.patch(
   isEmptyBody,
   isValidId,
   validateBody(updateColumnSchema),
-
   columnCtrl.updateColumn
 );
 
