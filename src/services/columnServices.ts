@@ -3,10 +3,11 @@ import { IFilter, IColumnBody } from '../types';
 import Column from '../db/models/Column';
 import Board from '../db/models/Board';
 import Task from '../db/models/Task';
+import { Types } from 'mongoose';
 import HttpError from '../helpers/HttpError';
 
 const createColumn = async (body: IColumnBody) => {
-  const { boardId } = body;
+  const { boardId, userId } = body;
 
   const board = await Board.findOne({ _id: boardId });
 
@@ -15,40 +16,68 @@ const createColumn = async (body: IColumnBody) => {
   }
 
   const newColumn = await Column.create(body);
-
   const { _id } = newColumn;
 
-  await Board.findByIdAndUpdate({ _id: boardId }, { $push: { columns: _id } });
+  if (newColumn) {
+    await Board.findOneAndUpdate(
+      { _id: boardId, userId },
+      { $push: { columns: _id } }
+    );
+  }
 
   return newColumn;
 };
 
-const updateColumn = async (filter: IFilter, body: IColumnBody) => {
-  return await Column.findOneAndUpdate(filter, body);
+const checkBoard = async (filter: IFilter) => {
+  return await Board.findOne(filter);
 };
 
-const deleteColumn = async (filter: IFilter, boardId: string) => {
-  const newBoard = await Board.findByIdAndUpdate(boardId, {
-    $pull: { columns: filter?._id },
-  });
+const updateColumn = async (filter: IFilter, body: IColumnBody) => {
+  const updatedColumn = await Column.findOneAndUpdate(filter, body);
 
-  if (!newBoard) {
-    throw new HttpError(400, 'Board not found by id');
-  }
-  ///{_id, boardId, userId}
-  const deletedColumn = await Column.findByIdAndDelete(filter);
+  return updatedColumn?.populate('tasks');
+};
 
-  if (!deletedColumn) {
-    throw new HttpError(400, 'Column not found by id');
-  }
-
-  await Task.deleteMany({ columnId: deletedColumn?._id });
+const deleteColumn = async (filter: IFilter) => {
+  const deletedColumn = await Column.findOneAndDelete(filter);
 
   return deletedColumn;
+};
+
+const deleteTasks = async (filter: IFilter) => {
+  return await Task.deleteMany(filter);
+};
+
+const deleteColumnFromBoard = async (filter: IFilter) => {
+  const { _id, boardId, userId } = filter;
+
+  const objectColumnId = new Types.ObjectId(_id);
+
+  const newBoard = await Board.findOneAndUpdate(
+    { _id: boardId, userId },
+    {
+      $pull: { columns: objectColumnId },
+    }
+  );
+  return newBoard;
+};
+const addColumnToBoard = async (filter: IFilter) => {
+  const { _id, boardId, userId } = filter;
+
+  const newBoard = await Board.findOneAndUpdate(
+    { _id: boardId, userId },
+    { $push: { columns: _id } }
+  );
+
+  return newBoard;
 };
 
 export default {
   createColumn,
   updateColumn,
   deleteColumn,
+  checkBoard,
+  deleteColumnFromBoard,
+  addColumnToBoard,
+  deleteTasks,
 };
