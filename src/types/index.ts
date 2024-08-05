@@ -75,6 +75,8 @@ export interface IColumn extends Document {
   userId: Types.ObjectId;
   title: string;
   tasks: object[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface ITask extends Document {
@@ -101,7 +103,7 @@ export interface IUser extends Document {
 }
 
 export interface IFilter {
-  _id: string;
+  _id?: string;
   userId?: string;
   boardId?: string;
   columnId?: string;
