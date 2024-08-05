@@ -1,4 +1,3 @@
-import { Server } from 'http';
 import swaggerJsdoc from 'swagger-jsdoc';
 
 const swaggerOptions = {
