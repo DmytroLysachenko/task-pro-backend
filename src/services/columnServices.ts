@@ -2,6 +2,7 @@ import { IFilter, IColumnBody } from '../types';
 
 import Column from '../db/models/Column';
 import Board from '../db/models/Board';
+import Task from '../db/models/Task';
 
 const createColumn = async (body: IColumnBody) => {
   const newColumn = await Column.create(body);
@@ -23,8 +24,10 @@ const deleteColumn = async (filter: IFilter, boardId: string) => {
 
   await Board.findByIdAndUpdate(
     { _id: boardId },
-    { $pull: { columns: filter } }
+    { $pull: { columns: deletedColumn?._id } }
   );
+
+  await Task.deleteMany({ columnId: deletedColumn?._id });
 
   return deletedColumn;
 };

@@ -3,7 +3,6 @@ import { Controller } from '../types';
 import ctrlWrapper from '../decorators/ctrlWrapper';
 import taskServices from '../services/taskServices';
 import HttpError from '../helpers/HttpError';
-import { log } from 'console';
 
 const createTask: Controller = async (req, res) => {
   const userId = req.user?._id;

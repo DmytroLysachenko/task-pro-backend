@@ -6,7 +6,10 @@ export const backgroundConvert: Controller = async (req, res, next) => {
   try {
     const { backgroundImg }: { backgroundImg: string } = req.body;
 
-    if (!Object.keys(boardBgImages).includes(backgroundImg)) {
+    if (
+      !Object.keys(boardBgImages).includes(backgroundImg) &&
+      !backgroundImg === null
+    ) {
       throw new HttpError(
         400,
         `Bad request. ${backgroundImg} is not valid background image`

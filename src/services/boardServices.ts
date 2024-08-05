@@ -1,11 +1,18 @@
 import Board from '../db/models/Board';
+import Column from '../db/models/Column';
+import Task from '../db/models/Task';
 
 import { IBoard } from '../types';
 
 export const getBoardsService = async (userId: string): Promise<IBoard[]> => {
   return await Board.find({ userId }).populate({
     path: 'columns',
-    // populate: { path: 'tasks', model: Task },
+    select: 'title',
+    populate: {
+      path: 'tasks',
+      select: ['description', 'title', 'priority', 'deadline'],
+      model: Task,
+    },
   });
 };
 
@@ -26,5 +33,9 @@ export const updateBoardService = async (
 export const deleteBoardService = async (
   boardId: string
 ): Promise<IBoard | null> => {
-  return await Board.findByIdAndDelete(boardId);
+  const deletedBoard = await Board.findByIdAndDelete(boardId);
+  await Column.deleteMany({ boardId });
+  await Task.deleteMany({ boardId });
+
+  return deletedBoard;
 };
