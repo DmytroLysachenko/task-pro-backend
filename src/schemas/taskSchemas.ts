@@ -12,4 +12,5 @@ export const updateTaskSchema = Joi.object({
   description: Joi.string(),
   priority: Joi.string().valid('low', 'medium', 'high').default(''),
   deadline: Joi.string(),
+  columnId: Joi.string(),
 });
