@@ -23,7 +23,7 @@ columnRouter.post(
 
 /**
  * @openapi
- * /api/columns-management/boards/{boardId}/columns:
+ * /api/boards/{boardId}/columns:
  *   post:
  *     tags:
  *       - Columns
@@ -65,7 +65,7 @@ columnRouter.patch(
 
 /**
  * @openapi
- * /api/columns-management/boards/{boardId}/columns/:columnId:
+ * /api/boards/{boardId}/columns/:columnId:
  *   patch:
  *     tags:
  *       - Columns
@@ -111,7 +111,7 @@ columnRouter.delete(
 
 /**
  * @openapi
- * /api/columns-management/boards/{boardId}/columns/:columnId:
+ * /api/boards/{boardId}/columns/:columnId:
  *   delete:
  *     tags:
  *       - Columns

@@ -11,7 +11,7 @@ router.get('/boards', authenticate, boardController.getBoards);
 
 /**
  * @openapi
- * /api/boards-management/boards:
+ * /api/boards:
  *   get:
  *     tags:
  *       - Boards
@@ -41,7 +41,7 @@ router.post(
 
 /**
  * @openapi
- * /api/boards-management/boards:
+ * /api/boards:
  *   post:
  *     tags:
  *       - Boards
@@ -77,7 +77,7 @@ router.patch(
 
 /**
  * @openapi
- * /api/boards-management/boards/:boardId:
+ * /api/boards/:boardId:
  *   patch:
  *     tags:
  *       - Boards
@@ -115,7 +115,7 @@ router.delete('/boards/:boardId', authenticate, boardController.deleteBoard);
 
 /**
  * @openapi
- * /api/boards-management/boards/:boardId:
+ * /api/boards/:boardId:
  *   delete:
  *     tags:
  *       - Boards

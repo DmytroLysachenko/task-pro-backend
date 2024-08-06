@@ -29,11 +29,11 @@ const startServer = async () => {
 
   app.use('/api/auth', authRouter);
 
-  app.use('/api/boards-management', boardRouter);
+  app.use('/api', taskRouter);
 
-  app.use('/api/columns-management', columnRouter);
+  app.use('/api', columnRouter);
 
-  app.use('/api/tasks-management', taskRouter);
+  app.use('/api', boardRouter);
 
   app.use('/api/support', supportRouter);
 
