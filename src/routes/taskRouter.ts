@@ -20,7 +20,7 @@ taskRouter.post(
 
 /**
  * @openapi
- * /api/tasks-management/boards/:boardId/columns/:columnId/tasks:
+ * /api/boards/:boardId/columns/:columnId/tasks:
  *   post:
  *     tags:
  *       - Tasks
@@ -68,7 +68,7 @@ taskRouter.patch(
 
 /**
  * @openapi
- * /api/tasks-management/boards/:boardId/columns/:columnId/tasks/:taskId:
+ * /api/boards/:boardId/columns/:columnId/tasks/:taskId:
  *   post:
  *     tags:
  *       - Tasks
@@ -120,7 +120,7 @@ taskRouter.delete(
 
 /**
  * @openapi
- * /api/tasks-management/boards/:boardId/columns/:columnId/tasks/:taskId:
+ * /api/boards/:boardId/columns/:columnId/tasks/:taskId:
  *   delete:
  *     tags:
  *       - Tasks
