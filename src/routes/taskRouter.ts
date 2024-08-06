@@ -48,7 +48,7 @@ taskRouter.post(
  *       required: true
  *     responses:
  *       201:
- *         description: Task successfully created
+ *         description: Task created successfully
  *         content:
  *           application/json:
  *             schema:
@@ -102,7 +102,7 @@ taskRouter.patch(
  *       required: true
  *     responses:
  *       201:
- *         description: Task successfully updated
+ *         description: Task updated successfully
  *         content:
  *           application/json:
  *             schema:
@@ -148,7 +148,7 @@ taskRouter.delete(
  *           example: "64d5f7d1c2d1e8d4d8c9b5a2"
  *     responses:
  *       204:
- *         description: Task successfully deleted
+ *         description: Task deleted successfully
  *       404:
  *         description: Task not found
  */

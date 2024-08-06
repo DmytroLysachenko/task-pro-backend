@@ -32,7 +32,7 @@ const createTask: Controller = async (req, res) => {
 
   res.status(201).json({
     status: 201,
-    message: 'Task successfully created',
+    message: 'Task created successfully',
     data: { _id, title, description, priority, deadline, createdAt, updatedAt },
   });
 };
@@ -88,7 +88,7 @@ const updateTask: Controller = async (req, res) => {
 
   res.status(200).json({
     status: 200,
-    message: 'Task successfully updated',
+    message: 'Task updated successfully',
     data: { _id, title, description, priority, deadline, createdAt, updatedAt },
   });
 };

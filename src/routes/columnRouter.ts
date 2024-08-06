@@ -12,9 +12,18 @@ import {
 
 const columnRouter = express.Router();
 
+columnRouter.post(
+  '/boards/:boardId/columns',
+  authenticate,
+  isEmptyBody,
+  isValidId,
+  validateBody(createColumnSchema),
+  columnCtrl.createColumn
+);
+
 /**
  * @openapi
- * /api/boards/{boardId}/columns:
+ * /api/columns-management/boards/{boardId}/columns:
  *   post:
  *     tags:
  *       - Columns
@@ -36,7 +45,7 @@ const columnRouter = express.Router();
  *       required: true
  *     responses:
  *       201:
- *         description: Column successfully created
+ *         description: Column created successfully
  *         content:
  *           application/json:
  *             schema:
@@ -45,18 +54,18 @@ const columnRouter = express.Router();
  *         description: Board not found
  */
 
-columnRouter.post(
-  '/boards/:boardId/columns',
+columnRouter.patch(
+  '/boards/:boardId/columns/:columnId',
   authenticate,
   isEmptyBody,
   isValidId,
-  validateBody(createColumnSchema),
-  columnCtrl.createColumn
+  validateBody(updateColumnSchema),
+  columnCtrl.updateColumn
 );
 
 /**
  * @openapi
- * /api/boards/{boardId}/columns/{id}:
+ * /api/columns-management/boards/{boardId}/columns/:columnId:
  *   patch:
  *     tags:
  *       - Columns
@@ -84,7 +93,7 @@ columnRouter.post(
  *       required: true
  *     responses:
  *       200:
- *         description: Column successfully updated
+ *         description: Column updated successfully
  *         content:
  *           application/json:
  *             schema:
@@ -93,18 +102,16 @@ columnRouter.post(
  *         description: Column not found
  */
 
-columnRouter.patch(
+columnRouter.delete(
   '/boards/:boardId/columns/:columnId',
   authenticate,
-  isEmptyBody,
   isValidId,
-  validateBody(updateColumnSchema),
-  columnCtrl.updateColumn
+  columnCtrl.deleteColumn
 );
 
 /**
  * @openapi
- * /api/boards/{boardId}/columns/{id}:
+ * /api/columns-management/boards/{boardId}/columns/:columnId:
  *   delete:
  *     tags:
  *       - Columns
@@ -126,16 +133,9 @@ columnRouter.patch(
  *           example: "64d5f7d1c2d1e8d4d8c9b5a2"
  *     responses:
  *       204:
- *         description: Column successfully deleted
+ *         description: Column deleted successfully
  *       404:
  *         description: Column not found
  */
-
-columnRouter.delete(
-  '/boards/:boardId/columns/:columnId',
-  authenticate,
-  isValidId,
-  columnCtrl.deleteColumn
-);
 
 export default columnRouter;

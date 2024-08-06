@@ -14,6 +14,12 @@ import isEmptyBody from '../middlewares/isEmptyBody';
 
 const authRouter = express.Router();
 
+authRouter.post(
+  '/register',
+  validateBody(registerSchema),
+  authControllers.registerUser
+);
+
 /**
  * @openapi
  * /api/auth/register:
@@ -34,11 +40,7 @@ const authRouter = express.Router();
  *         description: Bad request
  */
 
-authRouter.post(
-  '/register',
-  validateBody(registerSchema),
-  authControllers.registerUser
-);
+authRouter.post('/login', validateBody(loginSchema), authControllers.loginUser);
 
 /**
  * @openapi
@@ -59,7 +61,7 @@ authRouter.post(
  *         description: Unauthorized
  */
 
-authRouter.post('/login', validateBody(loginSchema), authControllers.loginUser);
+authRouter.post('/logout', authenticate, authControllers.logoutUser);
 
 /**
  * @openapi
@@ -77,7 +79,7 @@ authRouter.post('/login', validateBody(loginSchema), authControllers.loginUser);
  *         description: Unauthorized
  */
 
-authRouter.post('/logout', authenticate, authControllers.logoutUser);
+authRouter.get('/current', authenticate, authControllers.getCurrentUser);
 
 /**
  * @openapi
@@ -99,7 +101,11 @@ authRouter.post('/logout', authenticate, authControllers.logoutUser);
  *         description: Unauthorized
  */
 
-authRouter.get('/current', authenticate, authControllers.getCurrentUser);
+authRouter.post(
+  '/refresh',
+  validateBody(refreshTokenSchema),
+  authControllers.refreshTokens
+);
 
 /**
  * @openapi
@@ -120,10 +126,13 @@ authRouter.get('/current', authenticate, authControllers.getCurrentUser);
  *         description: Bad request
  */
 
-authRouter.post(
-  '/refresh',
-  validateBody(refreshTokenSchema),
-  authControllers.refreshTokens
+authRouter.patch(
+  '/update',
+  upload.single('avatar'),
+  authenticate,
+  isEmptyBody,
+  validateBody(patchSchema),
+  authControllers.patchUser
 );
 
 /**
@@ -149,18 +158,11 @@ authRouter.post(
  *         description: Unauthorized
  */
 
-authRouter.patch(
-  '/update',
-  upload.single('avatar'),
-  authenticate,
-  isEmptyBody,
-  validateBody(patchSchema),
-  authControllers.patchUser
-);
+authRouter.get('/verify/:verificationToken', authControllers.verifyUser);
 
 /**
  * @openapi
- * /api/auth/verify/{verificationToken}:
+ * /api/auth/verify/:verificationToken:
  *   get:
  *     tags:
  *       - Auth
@@ -179,7 +181,11 @@ authRouter.patch(
  *         description: Bad request
  */
 
-authRouter.get('/verify/:verificationToken', authControllers.verifyUser);
+authRouter.post(
+  '/verify',
+  validateBody(resendVerifyMessageSchema),
+  authControllers.resendVerifyMessage
+);
 
 /**
  * @openapi
@@ -199,11 +205,5 @@ authRouter.get('/verify/:verificationToken', authControllers.verifyUser);
  *       400:
  *         description: Bad request
  */
-
-authRouter.post(
-  '/verify',
-  validateBody(resendVerifyMessageSchema),
-  authControllers.resendVerifyMessage
-);
 
 export default authRouter;
