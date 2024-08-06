@@ -4,9 +4,16 @@ import Column from '../db/models/Column';
 import Board from '../db/models/Board';
 import Task from '../db/models/Task';
 import { Types } from 'mongoose';
+import HttpError from '../helpers/HttpError';
 
 const createColumn = async (body: IColumnBody) => {
   const { boardId, userId } = body;
+
+  const board = await Board.findOne({ _id: boardId });
+
+  if (!board) {
+    throw new HttpError(400, `Board with id:${boardId} does not exist`);
+  }
 
   const newColumn = await Column.create(body);
   const { _id } = newColumn;
