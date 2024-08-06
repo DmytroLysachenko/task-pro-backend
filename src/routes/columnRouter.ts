@@ -36,13 +36,13 @@ const columnRouter = express.Router();
  *       required: true
  *     responses:
  *       201:
- *         description: Column created successfully
+ *         description: Column successfully created
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ColumnResponse'
- *       400:
- *         description: Bad request
+ *               $ref: '#/components/schemas/CreateColumnResponse'
+ *       404:
+ *         description: Board not found
  */
 
 columnRouter.post(
@@ -84,13 +84,13 @@ columnRouter.post(
  *       required: true
  *     responses:
  *       200:
- *         description: Column updated successfully
+ *         description: Column successfully updated
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/UpdateColumnResponse'
- *       400:
- *         description: Bad request
+ *       404:
+ *         description: Column not found
  */
 
 columnRouter.patch(
@@ -126,7 +126,7 @@ columnRouter.patch(
  *           example: "64d5f7d1c2d1e8d4d8c9b5a2"
  *     responses:
  *       204:
- *         description: Column deleted successfully
+ *         description: Column successfully deleted
  *       404:
  *         description: Column not found
  */

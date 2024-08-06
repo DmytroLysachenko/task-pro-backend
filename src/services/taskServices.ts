@@ -1,8 +1,9 @@
+import { Types } from 'mongoose';
+
 import { IFilter, ITaskBody } from '../types';
 
 import Task from '../db/models/Task';
 import Column from '../db/models/Column';
-import { Types } from 'mongoose';
 
 const createTask = async (body: ITaskBody) => {
   const newTask = await Task.create(body);
