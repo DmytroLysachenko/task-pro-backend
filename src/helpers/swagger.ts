@@ -89,6 +89,16 @@ const swaggerOptions = {
               },
               example: [],
             },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-08-05T12:00:00Z',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-08-05T12:00:00Z',
+            },
           },
           required: ['id', 'title', 'icon'],
         },
@@ -240,6 +250,16 @@ const swaggerOptions = {
               format: 'date-time',
               example: '2024-08-05T12:00:00Z',
             },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-08-05T12:00:00Z',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-08-05T12:00:00Z',
+            },
           },
         },
         CreateTaskRequest: {
@@ -324,6 +344,33 @@ const swaggerOptions = {
             },
             data: {
               $ref: '#/components/schemas/Task',
+            },
+          },
+        },
+        sendSupportEmailRequest: {
+          type: 'object',
+          properties: {
+            email: {
+              type: 'string',
+              example: 'user@mail.com',
+            },
+            message: {
+              type: 'string',
+              example: 'Comment message',
+            },
+          },
+          required: ['email', 'message'],
+        },
+        sendSupportEmailResponse: {
+          type: 'object',
+          properties: {
+            status: {
+              type: 'integer',
+              example: 200,
+            },
+            message: {
+              type: 'string',
+              example: 'Email send successfully',
             },
           },
         },
