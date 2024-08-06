@@ -1,19 +1,15 @@
 import ctrlWrapper from '../decorators/ctrlWrapper';
 import { Controller } from '../types';
 import { sendMail } from '../helpers/sendEmail';
-import { createTicketManager } from '../helpers/createTicketManager';
-
-const ticketManager = createTicketManager();
+import { getMarkup } from '../constants/supportEmail';
 
 const createRequest: Controller = async (req, res) => {
   const { email, message } = req.body;
 
-  const ticket = ticketManager.increaseTicket();
-
   const emailData = {
     to: 'sadig58183@eixdeal.com',
-    subject: `Support ticket #${ticket}`,
-    text: message,
+    subject: `Support request`,
+    html: getMarkup(email, message),
   };
 
   sendMail(emailData);
