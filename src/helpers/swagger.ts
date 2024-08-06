@@ -89,6 +89,16 @@ const swaggerOptions = {
               },
               example: [],
             },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-08-05T12:00:00Z',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-08-05T12:00:00Z',
+            },
           },
           required: ['id', 'title', 'icon'],
         },
@@ -236,6 +246,16 @@ const swaggerOptions = {
               example: 'low',
             },
             deadline: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-08-05T12:00:00Z',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-08-05T12:00:00Z',
+            },
+            updatedAt: {
               type: 'string',
               format: 'date-time',
               example: '2024-08-05T12:00:00Z',
