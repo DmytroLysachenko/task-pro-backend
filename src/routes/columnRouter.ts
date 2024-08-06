@@ -12,9 +12,18 @@ import {
 
 const columnRouter = express.Router();
 
+columnRouter.post(
+  '/boards/:boardId/columns',
+  authenticate,
+  isEmptyBody,
+  isValidId,
+  validateBody(createColumnSchema),
+  columnCtrl.createColumn
+);
+
 /**
  * @openapi
- * /api/boards/{boardId}/columns:
+ * /api/columns-management/boards/{boardId}/columns:
  *   post:
  *     tags:
  *       - Columns
@@ -40,23 +49,23 @@ const columnRouter = express.Router();
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ColumnResponse'
- *       400:
- *         description: Bad request
+ *               $ref: '#/components/schemas/CreateColumnResponse'
+ *       404:
+ *         description: Board not found
  */
 
-columnRouter.post(
-  '/boards/:boardId/columns',
+columnRouter.patch(
+  '/boards/:boardId/columns/:columnId',
   authenticate,
   isEmptyBody,
   isValidId,
-  validateBody(createColumnSchema),
-  columnCtrl.createColumn
+  validateBody(updateColumnSchema),
+  columnCtrl.updateColumn
 );
 
 /**
  * @openapi
- * /api/boards/{boardId}/columns/{id}:
+ * /api/columns-management/boards/{boardId}/columns/:columnId:
  *   patch:
  *     tags:
  *       - Columns
@@ -89,22 +98,20 @@ columnRouter.post(
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/UpdateColumnResponse'
- *       400:
- *         description: Bad request
+ *       404:
+ *         description: Column not found
  */
 
-columnRouter.patch(
+columnRouter.delete(
   '/boards/:boardId/columns/:columnId',
   authenticate,
-  isEmptyBody,
   isValidId,
-  validateBody(updateColumnSchema),
-  columnCtrl.updateColumn
+  columnCtrl.deleteColumn
 );
 
 /**
  * @openapi
- * /api/boards/{boardId}/columns/{id}:
+ * /api/columns-management/boards/{boardId}/columns/:columnId:
  *   delete:
  *     tags:
  *       - Columns
@@ -130,12 +137,5 @@ columnRouter.patch(
  *       404:
  *         description: Column not found
  */
-
-columnRouter.delete(
-  '/boards/:boardId/columns/:columnId',
-  authenticate,
-  isValidId,
-  columnCtrl.deleteColumn
-);
 
 export default columnRouter;

@@ -85,7 +85,7 @@ const swaggerOptions = {
             columns: {
               type: 'array',
               items: {
-                type: 'object', // Define the schema for objects in columns if needed
+                type: 'object',
               },
               example: [],
             },
@@ -126,7 +126,7 @@ const swaggerOptions = {
             columns: {
               type: 'array',
               items: {
-                type: 'object', // Define the schema for objects in columns if needed
+                type: 'object',
               },
               example: [],
             },
@@ -172,17 +172,7 @@ const swaggerOptions = {
           },
           required: ['title'],
         },
-        UpdateColumnRequest: {
-          type: 'object',
-          properties: {
-            title: {
-              type: 'string',
-              example: 'Updated Column Title',
-            },
-          },
-          required: ['title'],
-        },
-        ColumnResponse: {
+        CreateColumnResponse: {
           type: 'object',
           properties: {
             status: {
@@ -197,6 +187,16 @@ const swaggerOptions = {
               $ref: '#/components/schemas/Column',
             },
           },
+        },
+        UpdateColumnRequest: {
+          type: 'object',
+          properties: {
+            title: {
+              type: 'string',
+              example: 'Updated Column Title',
+            },
+          },
+          required: ['title'],
         },
         UpdateColumnResponse: {
           type: 'object',
@@ -214,21 +214,120 @@ const swaggerOptions = {
             },
           },
         },
-        DeleteColumnResponse: {
+        Task: {
+          type: 'object',
+          properties: {
+            _id: {
+              type: 'string',
+              example: '64d5f7d1c2d1e8d4d8c9b5a2',
+            },
+            title: {
+              type: 'string',
+              example: 'Task title',
+            },
+            description: {
+              type: 'string',
+              example: 'Task description',
+            },
+            priority: {
+              type: 'string',
+              enum: ['low', 'medium', 'high'],
+              default: '',
+              example: 'low',
+            },
+            deadline: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-08-05T12:00:00Z',
+            },
+          },
+        },
+        CreateTaskRequest: {
+          type: 'object',
+          properties: {
+            title: {
+              type: 'string',
+              example: 'New title',
+            },
+            description: {
+              type: 'string',
+              example: 'New description',
+            },
+            priority: {
+              type: 'string',
+              enum: ['low', 'medium', 'high'],
+              default: '',
+              example: 'low',
+            },
+            deadline: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-08-05T12:00:00Z',
+            },
+          },
+          required: ['title', 'description'],
+        },
+        CreateTaskResponse: {
           type: 'object',
           properties: {
             status: {
               type: 'integer',
-              example: 204,
+              example: 201,
             },
             message: {
               type: 'string',
-              example: 'Column successfully deleted',
+              example: 'Task successfully created',
+            },
+            data: {
+              $ref: '#/components/schemas/Task',
+            },
+          },
+        },
+        UpdateTaskRequest: {
+          type: 'object',
+          properties: {
+            columnId: {
+              type: 'string',
+              example: '64d5f7d1c2d1e8d4d8c9b5a2',
+            },
+            title: {
+              type: 'string',
+              example: 'New title',
+            },
+            description: {
+              type: 'string',
+              example: 'New description',
+            },
+            priority: {
+              type: 'string',
+              enum: ['low', 'medium', 'high'],
+              default: '',
+              example: 'low',
+            },
+            deadline: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-08-05T12:00:00Z',
+            },
+          },
+        },
+        UpdateTaskResponse: {
+          type: 'object',
+          properties: {
+            status: {
+              type: 'integer',
+              example: 200,
+            },
+            message: {
+              type: 'string',
+              example: 'Task successfully updated',
+            },
+            data: {
+              $ref: '#/components/schemas/Task',
             },
           },
         },
       },
-
       securitySchemes: {
         BearerAuth: {
           type: 'http',
@@ -238,7 +337,7 @@ const swaggerOptions = {
       },
     },
   },
-  apis: ['./dist/routes/*.js'], // Adjust this path as needed
+  apis: ['./dist/routes/*.js'],
 };
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 

@@ -30,7 +30,7 @@ const createColumn: Controller = async (req, res) => {
 
   res.status(201).json({
     status: 201,
-    message: 'Column successfully created',
+    message: 'Column created successfully',
     data: { _id, title, tasks, createdAt, updatedAt },
   });
 };
@@ -54,7 +54,7 @@ const updateColumn: Controller = async (req, res) => {
 
   res.status(200).json({
     status: 200,
-    message: 'Column successfully updated',
+    message: 'Column updated successfully',
     data: { _id, title, tasks, createdAt, updatedAt },
   });
 };

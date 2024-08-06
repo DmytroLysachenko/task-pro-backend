@@ -7,6 +7,8 @@ import { backgroundConvert } from '../middlewares/backgroundConvert';
 
 const router = Router();
 
+router.get('/boards', authenticate, boardController.getBoards);
+
 /**
  * @openapi
  * /api/boards-management/boards:
@@ -29,7 +31,13 @@ const router = Router();
  *         description: Unauthorized
  */
 
-router.get('/boards', authenticate, boardController.getBoards);
+router.post(
+  '/boards',
+  validateBody(boardSchema),
+  authenticate,
+  backgroundConvert,
+  boardController.createBoard
+);
 
 /**
  * @openapi
@@ -59,17 +67,17 @@ router.get('/boards', authenticate, boardController.getBoards);
  *         description: Unauthorized
  */
 
-router.post(
-  '/boards',
-  validateBody(boardSchema),
+router.patch(
+  '/boards/:boardId',
+  validateBody(boardUpdateSchema),
   authenticate,
   backgroundConvert,
-  boardController.createBoard
+  boardController.updateBoard
 );
 
 /**
  * @openapi
- * /api/boards-management/boards/{boardId}:
+ * /api/boards-management/boards/:boardId:
  *   patch:
  *     tags:
  *       - Boards
@@ -103,17 +111,11 @@ router.post(
  *         description: Board not found
  */
 
-router.patch(
-  '/boards/:boardId',
-  validateBody(boardUpdateSchema),
-  authenticate,
-  backgroundConvert,
-  boardController.updateBoard
-);
+router.delete('/boards/:boardId', authenticate, boardController.deleteBoard);
 
 /**
  * @openapi
- * /api/boards-management/boards/{boardId}:
+ * /api/boards-management/boards/:boardId:
  *   delete:
  *     tags:
  *       - Boards
@@ -135,7 +137,5 @@ router.patch(
  *       404:
  *         description: Board not found
  */
-
-router.delete('/boards/:boardId', authenticate, boardController.deleteBoard);
 
 export default router;
