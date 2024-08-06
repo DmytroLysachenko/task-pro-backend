@@ -327,6 +327,33 @@ const swaggerOptions = {
             },
           },
         },
+        sendSupportEmailRequest: {
+          type: 'object',
+          properties: {
+            email: {
+              type: 'string',
+              example: 'user@mail.com',
+            },
+            message: {
+              type: 'string',
+              example: 'Comment message',
+            },
+          },
+          required: ['email', 'message'],
+        },
+        sendSupportEmailResponse: {
+          type: 'object',
+          properties: {
+            status: {
+              type: 'integer',
+              example: 200,
+            },
+            message: {
+              type: 'string',
+              example: 'Email send successfully',
+            },
+          },
+        },
       },
       securitySchemes: {
         BearerAuth: {

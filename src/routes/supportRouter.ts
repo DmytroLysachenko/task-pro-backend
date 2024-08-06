@@ -16,4 +16,28 @@ supportRouter.post(
   supportCtrl.createRequest
 );
 
+/**
+ * @openapi
+ * /api/support:
+ *   post:
+ *     tags:
+ *       - Support
+ *     summary: Send support email
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/sendSupportEmailRequest'
+ *       required: true
+ *     responses:
+ *       200:
+ *         description: Email send successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/sendSupportEmailResponse'
+ */
+
 export default supportRouter;
