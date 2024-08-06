@@ -3,6 +3,8 @@ import { Controller } from '../types';
 import ctrlWrapper from '../decorators/ctrlWrapper';
 import columnServices from '../services/columnServices';
 import HttpError from '../helpers/HttpError';
+import generalServices from '../services/generalServices';
+import { Types } from 'mongoose';
 
 const createColumn: Controller = async (req, res) => {
   const userId = req.user?._id as string;
@@ -25,7 +27,6 @@ const createColumn: Controller = async (req, res) => {
   }
 
   const { title, tasks, _id, createdAt, updatedAt } = data;
-  console.log(data);
 
   res.status(201).json({
     status: 201,
@@ -34,14 +35,14 @@ const createColumn: Controller = async (req, res) => {
   });
 };
 
-const updateColumn: Controller = async (req, res, next) => {
+const updateColumn: Controller = async (req, res) => {
   const body = req.body;
   const userId = req.user?._id as string;
 
-  const { id: _id, boardId } = req.params;
+  const { columnId, boardId } = req.params;
 
   const data = await columnServices.updateColumn(
-    { _id, boardId, userId },
+    { _id: columnId, boardId, userId },
     body
   );
 
@@ -49,34 +50,44 @@ const updateColumn: Controller = async (req, res, next) => {
     throw new HttpError(400, 'Column not found');
   }
 
+  const { title, tasks, _id, createdAt, updatedAt } = data;
+
   res.status(200).json({
     status: 200,
     message: 'Column successfully updated',
-    data,
+    data: { _id, title, tasks, createdAt, updatedAt },
   });
 };
 
 const deleteColumn: Controller = async (req, res) => {
-  const { id: _id, boardId } = req.params;
+  const { columnId, boardId } = req.params;
   const userId = req.user?._id as string;
 
-  const newBoard = await columnServices.deleteColumnFromBoard({
-    _id,
+  const objectColumnId = new Types.ObjectId(columnId);
+
+  const newBoard = await columnServices.deleteColumnFromBoard(
+    {
+      _id: boardId,
+      userId,
+    },
+    objectColumnId
+  );
+
+  if (!newBoard) {
+    throw new HttpError(404, `Column with id:${columnId} not found`);
+  }
+
+  const data = await columnServices.deleteColumn({
+    _id: columnId,
     boardId,
     userId,
   });
 
-  if (!newBoard) {
-    throw new HttpError(404, `Column id:${_id} not found`);
-  }
-
-  const data = await columnServices.deleteColumn({ _id, boardId, userId });
-
   if (!data) {
-    throw new HttpError(404, `Column with id:${_id} not found`);
+    throw new HttpError(404, `Column with id:${columnId} not found`);
   }
 
-  await columnServices.deleteTasks({ columnId: _id, boardId, userId });
+  await generalServices.deleteTasks({ columnId, boardId, userId });
 
   res.status(204).json();
 };

@@ -2,18 +2,12 @@ import { IFilter, IColumnBody } from '../types';
 
 import Column from '../db/models/Column';
 import Board from '../db/models/Board';
-import Task from '../db/models/Task';
+
 import { Types } from 'mongoose';
-import HttpError from '../helpers/HttpError';
+import Task from '../db/models/Task';
 
 const createColumn = async (body: IColumnBody) => {
   const { boardId, userId } = body;
-
-  const board = await Board.findOne({ _id: boardId });
-
-  if (!board) {
-    throw new HttpError(400, `Board with id:${boardId} does not exist`);
-  }
 
   const newColumn = await Column.create(body);
   const { _id } = newColumn;
@@ -33,33 +27,31 @@ const checkBoard = async (filter: IFilter) => {
 };
 
 const updateColumn = async (filter: IFilter, body: IColumnBody) => {
-  const updatedColumn = await Column.findOneAndUpdate(filter, body);
-
-  return updatedColumn?.populate('tasks');
+  return await Column.findOneAndUpdate(filter, body).populate({
+    path: 'tasks',
+    select: [
+      'description',
+      'title',
+      'priority',
+      'deadline',
+      'createdAt',
+      'updatedAt',
+    ],
+    model: Task,
+  });
 };
 
 const deleteColumn = async (filter: IFilter) => {
-  const deletedColumn = await Column.findOneAndDelete(filter);
-
-  return deletedColumn;
+  return await Column.findOneAndDelete(filter);
 };
 
-const deleteTasks = async (filter: IFilter) => {
-  return await Task.deleteMany(filter);
-};
-
-const deleteColumnFromBoard = async (filter: IFilter) => {
-  const { _id, boardId, userId } = filter;
-
-  const objectColumnId = new Types.ObjectId(_id);
-
-  const newBoard = await Board.findOneAndUpdate(
-    { _id: boardId, userId },
-    {
-      $pull: { columns: objectColumnId },
-    }
-  );
-  return newBoard;
+const deleteColumnFromBoard = async (
+  filter: IFilter,
+  columnId: Types.ObjectId
+) => {
+  return await Board.findOneAndUpdate(filter, {
+    $pull: { columns: columnId },
+  });
 };
 const addColumnToBoard = async (filter: IFilter) => {
   const { _id, boardId, userId } = filter;
@@ -79,5 +71,4 @@ export default {
   checkBoard,
   deleteColumnFromBoard,
   addColumnToBoard,
-  deleteTasks,
 };

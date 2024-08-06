@@ -94,7 +94,7 @@ columnRouter.post(
  */
 
 columnRouter.patch(
-  '/boards/:boardId/columns/:id',
+  '/boards/:boardId/columns/:columnId',
   authenticate,
   isEmptyBody,
   isValidId,
@@ -132,7 +132,7 @@ columnRouter.patch(
  */
 
 columnRouter.delete(
-  '/boards/:boardId/columns/:id',
+  '/boards/:boardId/columns/:columnId',
   authenticate,
   isValidId,
   columnCtrl.deleteColumn

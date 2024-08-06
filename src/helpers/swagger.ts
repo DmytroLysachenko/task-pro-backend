@@ -74,9 +74,13 @@ const swaggerOptions = {
               enum: ['icon_1', 'icon_2', 'icon_3'],
             },
             backgroundImg: {
-              type: 'string',
+              type: 'object',
               nullable: true,
-              example: 'http://example.com/background.jpg',
+              example: {
+                mobile: 'http://example.com/new-background.jpg',
+                tablet: 'http://example.com/new-background.jpg',
+                desktop: 'http://example.com/new-background.jpg',
+              },
             },
             columns: {
               type: 'array',
@@ -115,13 +119,9 @@ const swaggerOptions = {
               enum: ['icon_1', 'icon_2', 'icon_3'],
             },
             backgroundImg: {
-              type: 'object',
+              type: 'string',
               nullable: true,
-              example: {
-                mobile: 'http://example.com/new-background.jpg',
-                tablet: 'http://example.com/new-background.jpg',
-                desktop: 'http://example.com/new-background.jpg',
-              },
+              example: 'image_1',
             },
             columns: {
               type: 'array',

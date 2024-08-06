@@ -57,7 +57,6 @@ export interface RegisterPropsType {
 // Models Types
 
 export interface IBoard extends Document {
-  boardId: Types.ObjectId;
   userId: Types.ObjectId;
   title: string;
   icon: string;
@@ -70,7 +69,6 @@ export interface IBoard extends Document {
 }
 
 export interface IColumn extends Document {
-  columnId: Types.ObjectId;
   boardId: Types.ObjectId;
   userId: Types.ObjectId;
   title: string;
@@ -80,7 +78,6 @@ export interface IColumn extends Document {
 }
 
 export interface ITask extends Document {
-  taskId: Types.ObjectId;
   columnId: Types.ObjectId;
   boardId: Types.ObjectId;
   userId: Types.ObjectId;
@@ -88,6 +85,8 @@ export interface ITask extends Document {
   description: string;
   priority: string;
   deadline: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IUser extends Document {
@@ -111,3 +110,4 @@ export interface IFilter {
 
 export interface IColumnBody extends Partial<IColumn> {}
 export interface IBoardBody extends Partial<IBoard> {}
+export interface ITaskBody extends Partial<ITask> {}

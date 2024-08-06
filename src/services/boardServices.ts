@@ -7,10 +7,17 @@ import { IBoard } from '../types';
 export const getBoardsService = async (userId: string): Promise<IBoard[]> => {
   return await Board.find({ userId }).populate({
     path: 'columns',
-    select: 'title',
+    select: ['title', 'createdAt', 'updatedAt'],
     populate: {
       path: 'tasks',
-      select: ['description', 'title', 'priority', 'deadline'],
+      select: [
+        'description',
+        'title',
+        'priority',
+        'deadline',
+        'createdAt',
+        'updatedAt',
+      ],
       model: Task,
     },
   });

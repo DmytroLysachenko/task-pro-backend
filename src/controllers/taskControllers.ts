@@ -1,39 +1,24 @@
-import mongoose from 'mongoose';
 import { Types } from 'mongoose';
 
 import { Controller } from '../types';
 
-import Board from '../db/models/Board';
-import Column from '../db/models/Column';
 import HttpError from '../helpers/HttpError';
 import ctrlWrapper from '../decorators/ctrlWrapper';
 import taskServices from '../services/taskServices';
 
 const createTask: Controller = async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.user?._id as string;
   const { body } = req;
   const { boardId, columnId } = req.params;
 
-  const board = await Board.findOne({ _id: boardId });
-  if (!board) {
-    throw new HttpError(404, `Board with id:${boardId} not found`);
-  }
-  if (userId?.toString() !== board.userId.toString()) {
-    throw new HttpError(
-      401,
-      `Board id:${boardId} does not belong to this user`
-    );
-  }
+  const column = await taskServices.checkColumn({
+    _id: columnId,
+    boardId,
+    userId,
+  });
 
-  const column = await Column.findOne({ _id: columnId });
   if (!column) {
     throw new HttpError(404, `Column with id:${columnId} not found`);
-  }
-  if (userId?.toString() !== column.userId.toString()) {
-    throw new HttpError(
-      401,
-      `Column id:${columnId} does not belong to this user`
-    );
   }
 
   body.userId = userId;
@@ -42,91 +27,90 @@ const createTask: Controller = async (req, res) => {
 
   const data = await taskServices.createTask(body);
 
+  const { _id, title, description, priority, deadline, createdAt, updatedAt } =
+    data;
+
   res.status(201).json({
     status: 201,
     message: 'Task successfully created',
-    data,
+    data: { _id, title, description, priority, deadline, createdAt, updatedAt },
   });
 };
 
 const updateTask: Controller = async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.user?._id as string;
   const { body } = req;
   const { taskId, boardId, columnId } = req.params;
   const { columnId: newColumnId } = req.body;
 
-  const board = await Board.findOne({ _id: boardId });
-  if (!board) {
-    throw new HttpError(404, `Board with id:${boardId} not found`);
-  }
-  if (userId?.toString() !== board.userId.toString()) {
-    throw new HttpError(
-      401,
-      `Board id:${boardId} does not belong to this user`
-    );
-  }
+  const column = await taskServices.checkColumn({
+    _id: columnId,
+    boardId,
+    userId,
+  });
 
-  const column = await Column.findOne({ _id: columnId });
   if (!column) {
     throw new HttpError(404, `Column with id:${columnId} not found`);
   }
-  if (userId?.toString() !== column.userId.toString()) {
-    throw new HttpError(
-      401,
-      `Column id:${columnId} does not belong to this user`
-    );
+
+  if (newColumnId) {
+    const column = await taskServices.checkColumn({
+      _id: newColumnId,
+      boardId,
+      userId,
+    });
+    if (!column) {
+      throw new HttpError(404, `Column with id:${newColumnId} not found`);
+    }
   }
 
-  const data = await taskServices.updateTask({ _id: taskId }, body);
+  const data = await taskServices.updateTask(
+    { _id: taskId, columnId, boardId, userId },
+    body
+  );
+
   if (!data) {
     throw new HttpError(404, `Task with id:${taskId} not found`);
   }
 
-  const taskObjectId = new Types.ObjectId(taskId);
+  if (newColumnId) {
+    const taskObjectId = new Types.ObjectId(taskId);
 
-  await Column.findOneAndUpdate(
-    { _id: newColumnId },
-    { $push: { tasks: taskObjectId } }
-  );
-  await Column.findOneAndUpdate(
-    { _id: columnId },
-    { $pull: { tasks: taskObjectId } }
-  );
+    await taskServices.replaceTask(
+      { _id: columnId, boardId, userId },
+      { _id: newColumnId, boardId, userId },
+      taskObjectId
+    );
+  }
+
+  const { _id, title, description, priority, deadline, createdAt, updatedAt } =
+    data;
 
   res.status(200).json({
     status: 200,
     message: 'Task successfully updated',
-    data,
+    data: { _id, title, description, priority, deadline, createdAt, updatedAt },
   });
 };
 
 const deleteTask: Controller = async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.user?._id as string;
   const { taskId, columnId, boardId } = req.params;
 
-  const board = await Board.findOne({ _id: boardId });
-  if (!board) {
-    throw new HttpError(404, `Board with id:${boardId} not found`);
-  }
-  if (userId?.toString() !== board.userId.toString()) {
-    throw new HttpError(
-      401,
-      `Board id:${boardId} does not belong to this user`
-    );
-  }
+  const objectTaskId = new Types.ObjectId(taskId);
 
-  const column = await Column.findOne({ _id: columnId });
-  if (!column) {
-    throw new HttpError(404, `Column with id:${columnId} not found`);
-  }
-  if (userId?.toString() !== column.userId.toString()) {
-    throw new HttpError(
-      401,
-      `Column id:${columnId} does not belong to this user`
-    );
-  }
+  taskServices.deleteTaskFromColumn(
+    { _id: columnId, boardId, userId },
+    objectTaskId
+  );
 
-  const data = await taskServices.deleteTask({ _id: taskId }, columnId);
+  const data = await taskServices.deleteTask({
+    _id: taskId,
+    columnId,
+    boardId,
+    userId,
+  });
+
   if (!data) {
     throw new HttpError(404, `Task with id:${taskId} not found`);
   }
