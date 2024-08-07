@@ -170,12 +170,12 @@ authRouter.get('/current', authenticate, authControllers.getCurrentUser);
  *         description: Unauthorized
  */
 
-authRouter.get('/refresh', authControllers.refreshTokens);
+authRouter.post('/refresh', authControllers.refreshTokens);
 
 /**
  * @openapi
  * /api/auth/refresh:
- *   get:
+ *   post:
  *     tags:
  *       - Auth
  *     summary: Refresh user tokens. For this request you should use refresh bearer token in authorization header.
