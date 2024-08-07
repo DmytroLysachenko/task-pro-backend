@@ -21,3 +21,7 @@ export const patchSchema = Joi.object().keys({
 export const resendVerifyMessageSchema = Joi.object().keys({
   email: Joi.string().required().email(),
 });
+
+export const refreshTokenSchema = Joi.object().keys({
+  refreshToken: Joi.string().required(),
+});

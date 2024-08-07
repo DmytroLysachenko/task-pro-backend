@@ -252,17 +252,7 @@ const refreshTokens: Controller = async (req, res) => {
   const REFRESH_JWT_SECRET = env('REFRESH_JWT_SECRET');
   const ACCESS_JWT_SECRET = env('ACCESS_JWT_SECRET');
 
-  const { authorization } = req.headers;
-
-  if (!authorization) {
-    throw new HttpError(401, `Authorization header not found`);
-  }
-
-  const [bearer, oldRefreshToken] = authorization.split(' ');
-
-  if (bearer !== 'Bearer') {
-    throw new HttpError(401, 'Bearer not found');
-  }
+  const { refreshToken: oldRefreshToken } = req.body;
 
   const { id } = jwt.verify(
     oldRefreshToken,

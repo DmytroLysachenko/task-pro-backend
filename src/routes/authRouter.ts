@@ -9,6 +9,7 @@ import { authenticate } from '../middlewares/authenticate';
 import {
   loginSchema,
   patchSchema,
+  refreshTokenSchema,
   registerSchema,
   resendVerifyMessageSchema,
 } from '../schemas/authSchemas';
@@ -174,7 +175,11 @@ authRouter.get('/current', authenticate, authControllers.getCurrentUser);
  *         description: Unauthorized
  */
 
-authRouter.post('/refresh', authControllers.refreshTokens);
+authRouter.post(
+  '/refresh',
+  validateBody(refreshTokenSchema),
+  authControllers.refreshTokens
+);
 
 /**
  * @openapi
@@ -182,9 +187,12 @@ authRouter.post('/refresh', authControllers.refreshTokens);
  *   post:
  *     tags:
  *       - Auth
- *     summary: Refresh user tokens. For this request you should use refresh bearer token in authorization header.
- *     security:
- *       - BearerAuth: []
+ *     summary: Refresh user tokens
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/RefreshToken'
  *     responses:
  *       200:
  *         description: New tokens issued
