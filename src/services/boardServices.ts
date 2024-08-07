@@ -1,3 +1,4 @@
+import { IFilter } from './../types/index';
 import Board from '../db/models/Board';
 import Column from '../db/models/Column';
 import Task from '../db/models/Task';
@@ -31,18 +32,37 @@ export const createBoardService = async (
 };
 
 export const updateBoardService = async (
-  boardId: string,
+  filter: IFilter,
   updateData: Partial<IBoard>
 ): Promise<IBoard | null> => {
-  return await Board.findByIdAndUpdate(boardId, updateData, { new: true });
+  return await Board.findOneAndUpdate(filter, updateData).populate({
+    path: 'columns',
+    select: ['title', 'createdAt', 'updatedAt'],
+    populate: {
+      path: 'tasks',
+      select: [
+        'description',
+        'title',
+        'priority',
+        'deadline',
+        'createdAt',
+        'updatedAt',
+      ],
+      model: Task,
+    },
+  });
 };
 
 export const deleteBoardService = async (
-  boardId: string
+  filter: IFilter
 ): Promise<IBoard | null> => {
-  const deletedBoard = await Board.findByIdAndDelete(boardId);
-  await Column.deleteMany({ boardId });
-  await Task.deleteMany({ boardId });
+  const { boardId: _id, userId } = filter;
+
+  const deletedBoard = await Board.findOneAndDelete({ _id, userId });
+
+  await Column.deleteMany(filter);
+
+  await Task.deleteMany(filter);
 
   return deletedBoard;
 };

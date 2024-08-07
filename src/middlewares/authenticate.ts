@@ -14,6 +14,7 @@ export const authenticate: Controller = async (req, res, next) => {
     }
 
     const [bearer, token] = authorization.split(' ');
+
     if (bearer !== 'Bearer') {
       throw new HttpError(401, 'Bearer not found');
     }

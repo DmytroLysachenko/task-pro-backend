@@ -30,11 +30,11 @@ const taskSchema = new Schema(
     priority: {
       type: String,
       enum: taskPriorityLabels,
-      default: '',
+      default: null,
     },
     deadline: {
-      type: String,
-      default: '',
+      type: Date,
+      default: null,
     },
   },
   { versionKey: false, timestamps: true }

@@ -1,16 +1,12 @@
 import User from '../db/models/User';
-import {
-  FindOneUserType,
-  PatchUserDataType,
-  RegisterPropsType,
-} from '../types';
+import { IUserBody, IUserFilter } from '../types';
 
 export async function registerUser({
   username,
   email,
   password,
   verificationToken,
-}: RegisterPropsType) {
+}: IUserBody) {
   return User.create({
     username,
     email,
@@ -19,13 +15,10 @@ export async function registerUser({
   });
 }
 
-export async function findUser(filter: FindOneUserType) {
+export async function findUser(filter: IUserFilter) {
   return User.findOne(filter);
 }
 
-export async function updateUser(
-  filter: FindOneUserType,
-  data: PatchUserDataType
-) {
+export async function updateUser(filter: IUserFilter, data: IUserBody) {
   return User.findOneAndUpdate(filter, data);
 }

@@ -53,7 +53,9 @@ const loginUser: Controller = async (req, res) => {
   const ACCESS_JWT_SECRET = env('ACCESS_JWT_SECRET');
   const REFRESH_JWT_SECRET = env('REFRESH_JWT_SECRET');
   const { email, password } = req.body;
+
   const user = await authServices.findUser({ email });
+
   if (!user) {
     throw new HttpError(401, 'Email or password invalid');
   }
@@ -66,6 +68,7 @@ const loginUser: Controller = async (req, res) => {
   }
 
   const passwordCompare = await bcrypt.compare(password, user.password);
+
   if (!passwordCompare) {
     throw new HttpError(401, 'Email or password invalid');
   }
@@ -193,7 +196,7 @@ const patchUser: Controller = async (req, res) => {
   });
 };
 
-const verifyUser: Controller = async (req, res, next) => {
+const verifyUser: Controller = async (req, res) => {
   const { verificationToken } = req.params;
 
   const user = await authServices.findUser({
@@ -213,7 +216,7 @@ const verifyUser: Controller = async (req, res, next) => {
   res.sendFile('htmlPage.html', { root });
 };
 
-const resendVerifyMessage: Controller = async (req, res, next) => {
+const resendVerifyMessage: Controller = async (req, res) => {
   const { email } = req.body;
   const user = await authServices.findUser({
     email,
@@ -242,7 +245,7 @@ const resendVerifyMessage: Controller = async (req, res, next) => {
   });
 };
 
-const refreshTokens: Controller = async (req, res, next) => {
+const refreshTokens: Controller = async (req, res) => {
   const REFRESH_JWT_SECRET = env('REFRESH_JWT_SECRET');
   const ACCESS_JWT_SECRET = env('ACCESS_JWT_SECRET');
 
@@ -253,10 +256,14 @@ const refreshTokens: Controller = async (req, res, next) => {
     REFRESH_JWT_SECRET
   ) as jwt.JwtPayload;
 
-  const user = authServices.findUser({ _id: id });
+  const user = await authServices.findUser({ _id: id });
 
   if (!user) {
     throw new HttpError(401, 'User not found');
+  }
+
+  if (!user?.refreshToken) {
+    throw new HttpError(401, 'User already logged out');
   }
 
   const payload = { id };
@@ -274,8 +281,6 @@ const refreshTokens: Controller = async (req, res, next) => {
   res.json({
     status: 200,
     data: {
-      username: newUser?.username,
-      email: newUser?.email,
       accessToken: newUser?.accessToken,
       refreshToken: newUser?.refreshToken,
     },

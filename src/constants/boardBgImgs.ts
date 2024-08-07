@@ -3,7 +3,6 @@ interface BoardBgImagesType {
 }
 
 const boardBgImages: BoardBgImagesType = {
-  none: null,
   image_1: {
     mobile:
       'https://res.cloudinary.com/djejhblhf/image/upload/q_auto:eco/f_webp/mobile_1_jkkhig.jpg',

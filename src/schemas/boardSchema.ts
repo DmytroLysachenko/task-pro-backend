@@ -1,5 +1,6 @@
 import Joi from 'joi';
 import boardIcons from '../constants/boardIcons';
+import boardBgImages from '../constants/boardBgImgs';
 
 const boardSchema = Joi.object({
   title: Joi.string().required().messages({
@@ -8,7 +9,9 @@ const boardSchema = Joi.object({
   icon: Joi.string()
     .valid(...boardIcons)
     .default('icon_1'),
-  backgroundImg: Joi.string().allow(null).default(null),
+  backgroundImg: Joi.string()
+    .valid(...Object.keys(boardBgImages), null)
+    .default(null),
 });
 
 const boardUpdateSchema = Joi.object({
@@ -16,7 +19,7 @@ const boardUpdateSchema = Joi.object({
   icon: Joi.string()
     .valid(...boardIcons)
     .optional(),
-  backgroundImg: Joi.string().allow(null).optional(),
+  backgroundImg: Joi.string().valid(...Object.keys(boardBgImages), null),
 });
 
 export { boardSchema, boardUpdateSchema };

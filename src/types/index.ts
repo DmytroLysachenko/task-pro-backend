@@ -6,7 +6,7 @@ export interface RequestWithUser extends Request {
     _id: unknown | string;
     username: string;
     email: string;
-    avatarUrl: string;
+    avatarUrl: string | null;
     theme: 'light' | 'dark' | 'violet';
     isVerified: boolean;
   };
@@ -18,40 +18,11 @@ export type Controller = (
   next: NextFunction
 ) => Promise<void>;
 
-export interface EmailDataType {
+export interface IEmailData {
   to: string;
   subject: string;
   text?: string;
   html?: string;
-}
-
-export interface PatchUserDataType {
-  username?: string;
-  email?: string;
-  password?: string;
-  avatarUrl?: string;
-  theme?: 'light' | 'dark' | 'violet';
-  isVerified?: boolean;
-  verificationToken?: string;
-  accessToken?: string | null;
-  refreshToken?: string | null;
-}
-
-export interface FindOneUserType {
-  username?: string;
-  email?: string;
-  password?: string;
-  _id?: unknown;
-  verificationToken?: string;
-  accessToken?: string | null;
-  refreshToken?: string | null;
-}
-
-export interface RegisterPropsType {
-  username: string;
-  email: string;
-  password: string;
-  verificationToken: string;
 }
 
 // Models Types
@@ -66,6 +37,8 @@ export interface IBoard extends Document {
     desktop?: string;
   } | null;
   columns: object[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IColumn extends Document {
@@ -93,12 +66,12 @@ export interface IUser extends Document {
   username: string;
   email: string;
   password: string;
-  avatarUrl: string;
+  avatarUrl: string | null;
   theme: 'light' | 'dark' | 'violet';
   isVerified: boolean;
   verificationToken: string;
-  accessToken: string;
-  refreshToken: string;
+  accessToken: string | null;
+  refreshToken: string | null;
 }
 
 export interface IFilter {
@@ -108,6 +81,16 @@ export interface IFilter {
   columnId?: string;
 }
 
+export interface IUserFilter {
+  _id?: unknown | string;
+  username?: string;
+  email?: string;
+  verificationToken?: string;
+  accessToken?: string | null;
+  refreshToken?: string | null;
+}
+
 export interface IColumnBody extends Partial<IColumn> {}
 export interface IBoardBody extends Partial<IBoard> {}
 export interface ITaskBody extends Partial<ITask> {}
+export interface IUserBody extends Partial<IUser> {}
