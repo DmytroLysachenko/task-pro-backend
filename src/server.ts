@@ -11,6 +11,7 @@ import path from 'node:path';
 import swaggerSpec from './helpers/swagger';
 import swaggerUi from 'swagger-ui-express';
 import taskRouter from './routes/taskRouter';
+import supportRouter from './routes/supportRouter';
 
 const publicDirPath = path.resolve('src', 'public');
 
@@ -33,6 +34,8 @@ const startServer = async () => {
   app.use('/api', columnRouter);
 
   app.use('/api', boardRouter);
+
+  app.use('/api/support', supportRouter);
 
   app.use((_, res) => {
     res.status(404).json({ message: 'Route not found' });
