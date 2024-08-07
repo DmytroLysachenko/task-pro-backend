@@ -1,7 +1,8 @@
 import ctrlWrapper from '../decorators/ctrlWrapper';
-import { Controller } from '../types';
-import { sendMail } from '../helpers/sendEmail';
 import { getMarkup } from '../constants/supportEmail';
+import { sendMail } from '../helpers/sendEmail';
+
+import { Controller } from '../types';
 
 const createRequest: Controller = async (req, res) => {
   const { email, message } = req.body;

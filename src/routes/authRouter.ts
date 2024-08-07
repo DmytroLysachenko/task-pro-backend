@@ -1,5 +1,11 @@
 import express from 'express';
-import validateBody from '../helpers/validateBody';
+
+import authControllers from '../controllers/authControllers';
+
+import upload from '../middlewares/upload';
+import isEmptyBody from '../middlewares/isEmptyBody';
+import { authenticate } from '../middlewares/authenticate';
+
 import {
   loginSchema,
   patchSchema,
@@ -7,10 +13,8 @@ import {
   registerSchema,
   resendVerifyMessageSchema,
 } from '../schemas/authSchemas';
-import authControllers from '../controllers/authControllers';
-import { authenticate } from '../middlewares/authenticate';
-import upload from '../middlewares/upload';
-import isEmptyBody from '../middlewares/isEmptyBody';
+
+import validateBody from '../helpers/validateBody';
 
 const authRouter = express.Router();
 

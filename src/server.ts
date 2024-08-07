@@ -1,17 +1,21 @@
-import morgan from 'morgan';
 import cors from 'cors';
-import express, { NextFunction, Request, Response } from 'express';
-import dotenv from 'dotenv';
-import { env } from './helpers/env';
-import authRouter from './routes/authRouter';
-import columnRouter from './routes/columnRouter';
-import boardRouter from './routes/boardRouter';
-import HttpError from './helpers/HttpError';
 import path from 'node:path';
-import swaggerSpec from './helpers/swagger';
+import morgan from 'morgan';
+import dotenv from 'dotenv';
+import express from 'express';
 import swaggerUi from 'swagger-ui-express';
+
+import authRouter from './routes/authRouter';
 import taskRouter from './routes/taskRouter';
+import boardRouter from './routes/boardRouter';
+import columnRouter from './routes/columnRouter';
 import supportRouter from './routes/supportRouter';
+
+import { env } from './helpers/env';
+import HttpError from './helpers/HttpError';
+import swaggerSpec from './helpers/swagger';
+
+import { NextFunction, Request, Response } from 'express';
 
 const publicDirPath = path.resolve('src', 'public');
 

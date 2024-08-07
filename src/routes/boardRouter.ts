@@ -1,9 +1,13 @@
 import { Router } from 'express';
+
 import boardController from '../controllers/boardControllers';
+
 import { authenticate } from '../middlewares/authenticate';
-import validateBody from '../helpers/validateBody';
-import { boardSchema, boardUpdateSchema } from '../schemas/boardSchema';
 import { backgroundConvert } from '../middlewares/backgroundConvert';
+
+import { boardSchema, boardUpdateSchema } from '../schemas/boardSchema';
+
+import validateBody from '../helpers/validateBody';
 
 const router = Router();
 

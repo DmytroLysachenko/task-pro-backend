@@ -1,10 +1,10 @@
-import { Controller } from '../types';
-
+import HttpError from '../helpers/HttpError';
 import ctrlWrapper from '../decorators/ctrlWrapper';
 import columnServices from '../services/columnServices';
-import HttpError from '../helpers/HttpError';
 import generalServices from '../services/generalServices';
+
 import { Types } from 'mongoose';
+import { Controller } from '../types';
 
 const createColumn: Controller = async (req, res) => {
   const userId = req.user?._id as string;

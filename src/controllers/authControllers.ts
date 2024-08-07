@@ -1,15 +1,18 @@
-import HttpError from '../helpers/HttpError';
+import fs from 'node:fs/promises';
+import jwt from 'jsonwebtoken';
+import path from 'node:path';
 import bcrypt from 'bcrypt';
 import { nanoid } from 'nanoid';
-import { env } from '../helpers/env';
-import jwt from 'jsonwebtoken';
-import { Controller } from '../types';
-import ctrlWrapper from '../decorators/ctrlWrapper';
+
 import * as authServices from '../services/authServices';
-import { sendMail } from '../helpers/sendEmail';
+
+import ctrlWrapper from '../decorators/ctrlWrapper';
+import HttpError from '../helpers/HttpError';
 import cloudinary from '../helpers/cloudinary';
-import fs from 'node:fs/promises';
-import path from 'node:path';
+import { env } from '../helpers/env';
+import { sendMail } from '../helpers/sendEmail';
+
+import { Controller } from '../types';
 
 const registerUser: Controller = async (req, res) => {
   const { username, email, password } = req.body;

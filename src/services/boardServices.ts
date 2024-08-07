@@ -1,8 +1,8 @@
-import { IFilter } from './../types/index';
+import Task from '../db/models/Task';
 import Board from '../db/models/Board';
 import Column from '../db/models/Column';
-import Task from '../db/models/Task';
 
+import { IFilter } from './../types/index';
 import { IBoard } from '../types';
 
 export const getBoardsService = async (userId: string): Promise<IBoard[]> => {

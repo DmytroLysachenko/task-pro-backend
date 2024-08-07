@@ -1,11 +1,14 @@
 import express from 'express';
 
-import validateBody from '../helpers/validateBody';
 import taskCtrl from '../controllers/taskControllers';
-import isEmptyBody from '../middlewares/isEmptyBody';
+
 import isValidId from '../middlewares/isValidId';
+import isEmptyBody from '../middlewares/isEmptyBody';
 import { authenticate } from '../middlewares/authenticate';
+
 import { createTaskSchema, updateTaskSchema } from '../schemas/taskSchemas';
+
+import validateBody from '../helpers/validateBody';
 
 const taskRouter = express.Router();
 

@@ -1,10 +1,9 @@
-import { Types } from 'mongoose';
-
-import { Controller } from '../types';
-
 import HttpError from '../helpers/HttpError';
 import ctrlWrapper from '../decorators/ctrlWrapper';
 import taskServices from '../services/taskServices';
+
+import { Types } from 'mongoose';
+import { Controller } from '../types';
 
 const createTask: Controller = async (req, res) => {
   const userId = req.user?._id as string;

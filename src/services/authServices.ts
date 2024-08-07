@@ -1,4 +1,5 @@
 import User from '../db/models/User';
+
 import { IUserBody, IUserFilter } from '../types';
 
 export async function registerUser({
