@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 import { env } from './env';
 import { IEmailData } from '../types/index';
+
 dotenv.config();
 const UKR_NET_EMAIL = env('UKR_NET_EMAIL');
 const UKR_NET_PASSWORD = env('UKR_NET_PASSWORD');

@@ -35,9 +35,36 @@ authRouter.post(
  *             $ref: '#/components/schemas/Register'
  *     responses:
  *       201:
- *         description: User registered successfully
- *       400:
- *         description: Bad request
+ *         description: User successfully registered
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 201
+ *                 message:
+ *                   type: string
+ *                   example: 'User successfully registered'
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     username:
+ *                       type: string
+ *                       example: 'newUser123'
+ *                     email:
+ *                       type: string
+ *                       format: email
+ *                       example: 'newuser@example.com'
+ *               required:
+ *                 - status
+ *                 - message
+ *                 - data
+ *       409:
+ *         description: Email already in use
+ *       500:
+ *         description: Internal server error
  */
 
 authRouter.post('/login', validateBody(loginSchema), authControllers.loginUser);
@@ -56,9 +83,50 @@ authRouter.post('/login', validateBody(loginSchema), authControllers.loginUser);
  *             $ref: '#/components/schemas/Login'
  *     responses:
  *       200:
- *         description: User logged in successfully
+ *         description: Successful login
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 200
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     accessToken:
+ *                       type: string
+ *                       example: 'accessToken123'
+ *                     refreshToken:
+ *                       type: string
+ *                       example: 'refreshToken123'
+ *                     user:
+ *                       type: object
+ *                       properties:
+ *                         username:
+ *                           type: string
+ *                           example: 'newUser123'
+ *                         email:
+ *                           type: string
+ *                           format: email
+ *                           example: 'newuser@example.com'
+ *                         avatarUrl:
+ *                           type: string
+ *                           format: uri
+ *                           example: 'http://example.com/avatar.jpg'
+ *                         theme:
+ *                           type: string
+ *                           example: 'dark'
+ *               required:
+ *                 - status
+ *                 - data
  *       401:
- *         description: Unauthorized
+ *         description: Invalid email or password
+ *       400:
+ *         description: Email not verified
+ *       500:
+ *         description: Internal server error
  */
 
 authRouter.post('/logout', authenticate, authControllers.logoutUser);
@@ -77,6 +145,8 @@ authRouter.post('/logout', authenticate, authControllers.logoutUser);
  *         description: Successfully logged out
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
  */
 
 authRouter.get('/current', authenticate, authControllers.getCurrentUser);
@@ -121,9 +191,31 @@ authRouter.post(
  *             $ref: '#/components/schemas/RefreshToken'
  *     responses:
  *       200:
- *         description: Tokens refreshed successfully
- *       400:
- *         description: Bad request
+ *         description: New tokens issued
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 200
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     accessToken:
+ *                       type: string
+ *                       example: 'newAccessToken123'
+ *                     refreshToken:
+ *                       type: string
+ *                       example: 'newRefreshToken123'
+ *               required:
+ *                 - status
+ *                 - data
+ *       401:
+ *         description: Invalid or expired refresh token
+ *       500:
+ *         description: Internal server error
  */
 
 authRouter.patch(
@@ -142,20 +234,54 @@ authRouter.patch(
  *     tags:
  *       - Auth
  *     summary: Update user information
+ *     parameters:
+ *       - in: formData
+ *         name: avatar
+ *         type: file
+ *         description: The new avatar image
  *     requestBody:
  *       content:
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/PatchUser'
+ *
  *     security:
  *       - BearerAuth: []
  *     responses:
  *       200:
- *         description: User information updated successfully
- *       400:
- *         description: Bad request
- *       401:
- *         description: Unauthorized
+ *         description: User details updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 200
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     username:
+ *                       type: string
+ *                       example: 'updatedUser123'
+ *                     email:
+ *                       type: string
+ *                       format: email
+ *                       example: 'updateduser@example.com'
+ *                     theme:
+ *                       type: string
+ *                       example: 'light'
+ *                     avatarUrl:
+ *                       type: string
+ *                       format: uri
+ *                       example: 'http://example.com/new-avatar.jpg'
+ *               required:
+ *                 - status
+ *                 - data
+ *       408:
+ *         description: Email already in use
+ *       500:
+ *         description: Internal server error
  */
 
 authRouter.get('/verify/:verificationToken', authControllers.verifyUser);

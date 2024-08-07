@@ -37,7 +37,7 @@ const registerUser: Controller = async (req, res) => {
     html: `Good day! Please click on the following link to confirm your account in Task-pro app. <a href="${BASE_URL}/auth/verify/${verificationToken}" target="_blank" rel="noopener noreferrer">Confirm my mail</a>`,
   };
 
-  await sendMail(data);
+  sendMail(data);
 
   res.json({
     status: 201,
@@ -113,7 +113,7 @@ const getCurrentUser: Controller = async (req, res) => {
   const { email, username, avatarUrl, theme } = req.user as {
     email: string;
     username: string;
-    avatarUrl: string;
+    avatarUrl: string | null;
     theme: string;
   };
 

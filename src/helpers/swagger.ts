@@ -18,55 +18,107 @@ const swaggerOptions = {
         Register: {
           type: 'object',
           properties: {
-            username: { type: 'string' },
-            email: { type: 'string', format: 'email' },
-            password: { type: 'string', minLength: 8, maxLength: 16 },
+            username: { type: 'string', example: 'John Johnson' },
+            email: {
+              type: 'string',
+              format: 'email',
+              example: 'example@exnpl.com',
+            },
+            password: {
+              type: 'string',
+              minLength: 8,
+              maxLength: 16,
+              example: 'examplePasswrd',
+            },
           },
           required: ['username', 'email', 'password'],
         },
         Login: {
           type: 'object',
           properties: {
-            email: { type: 'string', format: 'email' },
-            password: { type: 'string', minLength: 8, maxLength: 16 },
+            email: {
+              type: 'string',
+              format: 'email',
+              example: 'example@exnpl.com',
+            },
+            password: {
+              type: 'string',
+              minLength: 8,
+              maxLength: 16,
+              example: 'examplePasswrd',
+            },
           },
           required: ['email', 'password'],
         },
         RefreshToken: {
           type: 'object',
           properties: {
-            refreshToken: { type: 'string' },
+            refreshToken: {
+              type: 'string',
+              example:
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjBhNmMxZjljNzYzYjgzYjg1ODUwYyIsImlhdCI6MTcyMzAyMzA2OSwiZXhwIjoxNzIzNjI3ODY5fQ.ujJPrXoOBN6sZkGfRuVhorkhjrs-KSxPn7J3qiOOkl8',
+            },
           },
           required: ['refreshToken'],
         },
         PatchUser: {
           type: 'object',
           properties: {
-            username: { type: 'string' },
-            email: { type: 'string', format: 'email' },
-            password: { type: 'string', minLength: 8, maxLength: 16 },
-            theme: { type: 'string', enum: ['light', 'dark', 'violet'] },
+            username: { type: 'string', example: 'John Johnson' },
+            email: {
+              type: 'string',
+              format: 'email',
+              example: 'example@exnpl.com',
+            },
+            password: {
+              type: 'string',
+              minLength: 8,
+              maxLength: 16,
+              example: 'examplePasswrd',
+            },
+            theme: {
+              type: 'string',
+              enum: ['light', 'dark', 'violet'],
+              example: 'dark',
+              default: 'light',
+            },
           },
         },
         ResendVerifyMessage: {
           type: 'object',
           properties: {
-            email: { type: 'string', format: 'email' },
+            email: {
+              type: 'string',
+              format: 'email',
+              example: 'example@exnpl.com',
+            },
           },
           required: ['email'],
         },
         User: {
           type: 'object',
           properties: {
-            id: { type: 'string' },
-            email: { type: 'string', format: 'email' },
-            name: { type: 'string' },
+            _id: { type: 'string', example: 'sadw32rc123312d3124' },
+            email: {
+              type: 'string',
+              format: 'email',
+              example: 'example@exnpl.com',
+            },
+            username: { type: 'string', example: 'John Johnson' },
+            theme: {
+              type: 'string',
+              example: 'dark',
+            },
+            avatarUrl: {
+              type: 'string',
+              example: 'myavatar.com/me.jpg',
+            },
           },
         },
         Board: {
           type: 'object',
           properties: {
-            id: { type: 'string', example: 'board123' },
+            _id: { type: 'string', example: 'board123' },
             title: { type: 'string', example: 'My Board' },
             icon: {
               type: 'string',
@@ -100,7 +152,7 @@ const swaggerOptions = {
               example: '2024-08-05T12:00:00Z',
             },
           },
-          required: ['id', 'title', 'icon'],
+          required: ['_id', 'title', 'icon'],
         },
         BoardCreation: {
           type: 'object',
@@ -242,13 +294,14 @@ const swaggerOptions = {
             priority: {
               type: 'string',
               enum: ['low', 'medium', 'high'],
-              default: '',
+              default: null,
               example: 'low',
             },
             deadline: {
               type: 'string',
-              format: 'date-time',
-              example: '2024-08-05T12:00:00Z',
+              format: 'date',
+              example: '2024-08-05',
+              default: null,
             },
             createdAt: {
               type: 'string',
@@ -276,13 +329,13 @@ const swaggerOptions = {
             priority: {
               type: 'string',
               enum: ['low', 'medium', 'high'],
-              default: '',
+              default: null,
               example: 'low',
             },
             deadline: {
               type: 'string',
-              format: 'date-time',
-              example: '2024-08-05T12:00:00Z',
+              format: 'date',
+              example: '2024-08-05',
             },
           },
           required: ['title', 'description'],
@@ -321,13 +374,13 @@ const swaggerOptions = {
             priority: {
               type: 'string',
               enum: ['low', 'medium', 'high'],
-              default: '',
+              default: null,
               example: 'low',
             },
             deadline: {
               type: 'string',
-              format: 'date-time',
-              example: '2024-08-05T12:00:00Z',
+              format: 'date',
+              example: '2024-08-05',
             },
           },
         },
