@@ -1,13 +1,15 @@
 import { Response } from 'express';
-import HttpError from '../helpers/HttpError';
+
 import ctrlWrapper from '../decorators/ctrlWrapper';
-import { Controller, RequestWithUser } from '../types/index';
 import {
   getBoardsService,
   createBoardService,
   updateBoardService,
   deleteBoardService,
 } from '../services/boardServices';
+import HttpError from '../helpers/HttpError';
+
+import { Controller, RequestWithUser } from '../types/index';
 
 const getBoards: Controller = async (req: RequestWithUser, res: Response) => {
   const userId = req.user?._id as string;

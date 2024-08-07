@@ -1,14 +1,17 @@
 import express from 'express';
 
 import columnCtrl from '../controllers/columnControllers';
-import validateBody from '../helpers/validateBody';
-import isEmptyBody from '../middlewares/isEmptyBody';
+
 import isValidId from '../middlewares/isValidId';
+import isEmptyBody from '../middlewares/isEmptyBody';
 import { authenticate } from '../middlewares/authenticate';
+
 import {
   createColumnSchema,
   updateColumnSchema,
 } from '../schemas/columnSchemas';
+
+import validateBody from '../helpers/validateBody';
 
 const columnRouter = express.Router();
 

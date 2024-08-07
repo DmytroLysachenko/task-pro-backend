@@ -1,10 +1,9 @@
-import { IFilter, IColumnBody } from '../types';
-
-import Column from '../db/models/Column';
+import Task from '../db/models/Task';
 import Board from '../db/models/Board';
+import Column from '../db/models/Column';
 
 import { Types } from 'mongoose';
-import Task from '../db/models/Task';
+import { IFilter, IColumnBody } from '../types';
 
 const createColumn = async (body: IColumnBody) => {
   const { boardId, userId } = body;

@@ -1,10 +1,13 @@
 import express from 'express';
 
+import supportCtrl from '../controllers/supportControllers';
+
 import isEmptyBody from '../middlewares/isEmptyBody';
 import { authenticate } from '../middlewares/authenticate';
+
 import { createSupportRequestSchema } from '../schemas/supportSchemas';
+
 import validateBody from '../helpers/validateBody';
-import supportCtrl from '../controllers/supportControllers';
 
 const supportRouter = express.Router();
 
