@@ -3,7 +3,6 @@ import validateBody from '../helpers/validateBody';
 import {
   loginSchema,
   patchSchema,
-  refreshTokenSchema,
   registerSchema,
   resendVerifyMessageSchema,
 } from '../schemas/authSchemas';
@@ -171,24 +170,17 @@ authRouter.get('/current', authenticate, authControllers.getCurrentUser);
  *         description: Unauthorized
  */
 
-authRouter.post(
-  '/refresh',
-  validateBody(refreshTokenSchema),
-  authControllers.refreshTokens
-);
+authRouter.get('/refresh', authControllers.refreshTokens);
 
 /**
  * @openapi
  * /api/auth/refresh:
- *   post:
+ *   get:
  *     tags:
  *       - Auth
- *     summary: Refresh user tokens
- *     requestBody:
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/RefreshToken'
+ *     summary: Refresh user tokens. For this request you should use refresh bearer token in authorization header.
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: New tokens issued
