@@ -238,14 +238,9 @@ authRouter.patch(
  *     tags:
  *       - Auth
  *     summary: Update user information
- *     parameters:
- *       - in: formData
- *         name: avatar
- *         type: file
- *         description: The new avatar image
  *     requestBody:
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             $ref: '#/components/schemas/PatchUser'
  *

@@ -21,6 +21,7 @@ export const authenticate: Controller = async (req, res, next) => {
     const { id } = jwt.verify(token, ACCESS_JWT_SECRET) as jwt.JwtPayload;
 
     const user = await findUser({ _id: id });
+
     if (!user) {
       throw new HttpError(401, 'User not found');
     }
@@ -30,10 +31,6 @@ export const authenticate: Controller = async (req, res, next) => {
     }
 
     const { _id, username, email, avatarUrl, theme, isVerified } = user;
-
-    if (!user.isVerified) {
-      throw new HttpError(401, 'User is not verified');
-    }
 
     req.user = {
       _id,

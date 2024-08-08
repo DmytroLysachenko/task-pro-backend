@@ -82,6 +82,10 @@ const swaggerOptions = {
               example: 'dark',
               default: 'light',
             },
+            avatar: {
+              type: 'string',
+              format: 'binary',
+            },
           },
         },
         ResendVerifyMessage: {
