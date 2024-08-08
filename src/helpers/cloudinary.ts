@@ -1,5 +1,8 @@
 import { env } from './env';
 import { v2 as cloudinary } from 'cloudinary';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const cloud_name = env('CLOUDINARY_CLOUD_NAME');
 const api_key = env('CLOUDINARY_API_KEY');
