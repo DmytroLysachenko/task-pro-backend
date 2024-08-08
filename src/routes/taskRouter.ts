@@ -72,7 +72,7 @@ taskRouter.patch(
 /**
  * @openapi
  * /api/boards/:boardId/columns/:columnId/tasks/:taskId:
- *   post:
+ *   patch:
  *     tags:
  *       - Tasks
  *     summary: Update task in a column
