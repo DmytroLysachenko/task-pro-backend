@@ -9,7 +9,6 @@ import { authenticate } from '../middlewares/authenticate';
 import {
   loginSchema,
   patchSchema,
-  refreshTokenSchema,
   registerSchema,
   resendVerifyMessageSchema,
 } from '../schemas/authSchemas';
@@ -99,6 +98,9 @@ authRouter.post('/login', validateBody(loginSchema), authControllers.loginUser);
  *                 data:
  *                   type: object
  *                   properties:
+ *                     sid:
+ *                       type: string
+ *                       example: 66b5c38d75ebcec2cb0ea42a
  *                     accessToken:
  *                       type: string
  *                       example: 'accessToken123'
@@ -175,11 +177,7 @@ authRouter.get('/current', authenticate, authControllers.getCurrentUser);
  *         description: Unauthorized
  */
 
-authRouter.post(
-  '/refresh',
-  validateBody(refreshTokenSchema),
-  authControllers.refreshTokens
-);
+authRouter.post('/refresh', authControllers.refreshTokens);
 
 /**
  * @openapi
@@ -187,12 +185,19 @@ authRouter.post(
  *   post:
  *     tags:
  *       - Auth
- *     summary: Refresh user tokens
+ *     summary: Refresh user tokens. In Auth header should be used Refresh token.
+ *     security:
+ *       - BearerAuth: []
  *     requestBody:
  *       content:
  *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/RefreshToken'
+ *              schema:
+ *               type: object
+ *               properties:
+ *                 sid:
+ *                   type: string
+ *                   example: 66b5c38d75ebcec2cb0ea42a
+
  *     responses:
  *       200:
  *         description: New tokens issued
@@ -207,6 +212,9 @@ authRouter.post(
  *                 data:
  *                   type: object
  *                   properties:
+ *                     sid:
+ *                       type: string
+ *                       example: 55b4c12d74ebcec2cb0ea25a
  *                     accessToken:
  *                       type: string
  *                       example: 'newAccessToken123'
@@ -284,27 +292,6 @@ authRouter.patch(
  */
 
 authRouter.get('/verify/:verificationToken', authControllers.verifyUser);
-
-/**
- * @openapi
- * /api/auth/verify/:verificationToken:
- *   get:
- *     tags:
- *       - Auth
- *     summary: Verify a user's email with a verification token
- *     parameters:
- *       - in: path
- *         name: verificationToken
- *         schema:
- *           type: string
- *         required: true
- *         description: The verification token sent to the user
- *     responses:
- *       200:
- *         description: User email verified successfully
- *       400:
- *         description: Bad request
- */
 
 authRouter.post(
   '/verify',

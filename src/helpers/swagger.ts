@@ -50,17 +50,7 @@ const swaggerOptions = {
           },
           required: ['email', 'password'],
         },
-        RefreshToken: {
-          type: 'object',
-          properties: {
-            refreshToken: {
-              type: 'string',
-              example:
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjBhNmMxZjljNzYzYjgzYjg1ODUwYyIsImlhdCI6MTcyMzAyMzA2OSwiZXhwIjoxNzIzNjI3ODY5fQ.ujJPrXoOBN6sZkGfRuVhorkhjrs-KSxPn7J3qiOOkl8',
-            },
-          },
-          required: ['refreshToken'],
-        },
+
         PatchUser: {
           type: 'object',
           properties: {
@@ -144,6 +134,29 @@ const swaggerOptions = {
                 type: 'object',
               },
               example: [],
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-08-05T12:00:00Z',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-08-05T12:00:00Z',
+            },
+          },
+          required: ['_id', 'title', 'icon'],
+        },
+        SideBoard: {
+          type: 'object',
+          properties: {
+            _id: { type: 'string', example: 'board123' },
+            title: { type: 'string', example: 'My Board' },
+            icon: {
+              type: 'string',
+              example: 'icon_1',
+              enum: ['icon_1', 'icon_2', 'icon_3'],
             },
             createdAt: {
               type: 'string',

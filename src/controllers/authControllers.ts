@@ -77,6 +77,9 @@ const loginUser: Controller = async (req, res) => {
   }
 
   const { _id } = user;
+
+  await authServices.abortSession({ userId: _id });
+
   const payload = { id: _id };
 
   const accessToken = jwt.sign(payload, ACCESS_JWT_SECRET, { expiresIn: '7d' });
@@ -84,20 +87,27 @@ const loginUser: Controller = async (req, res) => {
     expiresIn: '7d',
   });
 
-  const updUser = await authServices.updateUser(
-    { _id },
-    { accessToken, refreshToken }
-  );
+  const newSession = await authServices.createSession({
+    userId: _id,
+    accessToken,
+    refreshToken,
+  });
+
+  if (!newSession) {
+    throw new HttpError(400, `Something went wrong during session creation`);
+  }
+
   res.json({
     status: 200,
     data: {
       accessToken,
       refreshToken,
+      sid: newSession?._id,
       user: {
-        username: updUser?.username,
-        email: updUser?.email,
-        avatarUrl: updUser?.avatarUrl,
-        theme: updUser?.theme,
+        username: user?.username,
+        email: user?.email,
+        avatarUrl: user?.avatarUrl,
+        theme: user?.theme,
       },
     },
   });
@@ -105,10 +115,7 @@ const loginUser: Controller = async (req, res) => {
 
 const logoutUser: Controller = async (req, res) => {
   const _id = req.user;
-  await authServices.updateUser(
-    { _id },
-    { accessToken: null, refreshToken: null }
-  );
+  await authServices.abortSession({ userId: _id });
   res.json({ status: 204, message: 'Successfully logged out!' });
 };
 
@@ -251,22 +258,31 @@ const resendVerifyMessage: Controller = async (req, res) => {
 const refreshTokens: Controller = async (req, res) => {
   const REFRESH_JWT_SECRET = env('REFRESH_JWT_SECRET');
   const ACCESS_JWT_SECRET = env('ACCESS_JWT_SECRET');
+  const { authorization } = req.headers;
+  const { sid } = req.body;
 
-  const { refreshToken: oldRefreshToken } = req.body;
+  if (!authorization) {
+    throw new HttpError(401, `Authorization header not found`);
+  }
+
+  const [bearer, oldRefreshToken] = authorization.split(' ');
+
+  if (bearer !== 'Bearer') {
+    throw new HttpError(401, 'Bearer not found');
+  }
 
   const { id } = jwt.verify(
     oldRefreshToken,
     REFRESH_JWT_SECRET
   ) as jwt.JwtPayload;
 
-  const user = await authServices.findUser({ _id: id });
+  const currentSession = await authServices.abortSession({
+    userId: id,
+    _id: sid,
+  });
 
-  if (!user) {
-    throw new HttpError(401, 'User not found');
-  }
-
-  if (!user?.refreshToken) {
-    throw new HttpError(401, 'User already logged out');
+  if (!currentSession) {
+    throw new HttpError(401, 'Session not found');
   }
 
   const payload = { id };
@@ -276,16 +292,18 @@ const refreshTokens: Controller = async (req, res) => {
     expiresIn: '7d',
   });
 
-  const newUser = await authServices.updateUser(
-    { _id: id },
-    { accessToken, refreshToken }
-  );
+  const newSession = await authServices.createSession({
+    userId: id,
+    accessToken,
+    refreshToken,
+  });
 
   res.json({
     status: 200,
     data: {
-      accessToken: newUser?.accessToken,
-      refreshToken: newUser?.refreshToken,
+      sid: newSession?._id,
+      accessToken: newSession?.accessToken,
+      refreshToken: newSession?.refreshToken,
     },
   });
 };

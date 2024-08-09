@@ -30,6 +30,28 @@ router.get('/boards', authenticate, boardController.getBoards);
  *             schema:
  *               type: array
  *               items:
+ *                 $ref: '#/components/schemas/SideBoard'
+ *       401:
+ *         description: Unauthorized
+ */
+
+router.get('/board', authenticate, boardController.getBoard);
+
+/**
+ * @openapi
+ * /api/board/:boardId:
+ *   get:
+ *     tags:
+ *       - Boards
+ *     summary: Retrieve a board by Board ID
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of boards
+ *         content:
+ *           application/json:
+ *             schema:
  *                 $ref: '#/components/schemas/Board'
  *       401:
  *         description: Unauthorized

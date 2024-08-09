@@ -70,6 +70,10 @@ export interface IUser extends Document {
   theme: 'light' | 'dark' | 'violet';
   isVerified: boolean;
   verificationToken: string;
+}
+
+export interface ISession extends Document {
+  userId: Types.ObjectId | unknown;
   accessToken: string | null;
   refreshToken: string | null;
 }
@@ -94,3 +98,4 @@ export interface IColumnBody extends Partial<IColumn> {}
 export interface IBoardBody extends Partial<IBoard> {}
 export interface ITaskBody extends Partial<ITask> {}
 export interface IUserBody extends Partial<IUser> {}
+export interface ISessionBody extends Partial<ISession> {}

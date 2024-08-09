@@ -6,7 +6,11 @@ import { IFilter } from './../types/index';
 import { IBoard } from '../types';
 
 export const getBoardsService = async (userId: string): Promise<IBoard[]> => {
-  return await Board.find({ userId }).populate({
+  return await Board.find({ userId });
+};
+
+export const getBoardService = async (userId: string, boardId: string) => {
+  const board = await Board.find({ userId, _id: boardId }).populate({
     path: 'columns',
     select: ['title', 'createdAt', 'updatedAt'],
     populate: {
@@ -22,6 +26,7 @@ export const getBoardsService = async (userId: string): Promise<IBoard[]> => {
       model: Task,
     },
   });
+  return board;
 };
 
 export const createBoardService = async (

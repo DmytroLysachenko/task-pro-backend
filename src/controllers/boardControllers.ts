@@ -6,10 +6,11 @@ import {
   createBoardService,
   updateBoardService,
   deleteBoardService,
+  getBoardService,
 } from '../services/boardServices';
 import HttpError from '../helpers/HttpError';
 
-import { Controller, RequestWithUser } from '../types/index';
+import { Controller, IBoard, RequestWithUser } from '../types/index';
 
 const getBoards: Controller = async (req: RequestWithUser, res: Response) => {
   const userId = req.user?._id as string;
@@ -17,14 +18,28 @@ const getBoards: Controller = async (req: RequestWithUser, res: Response) => {
   const boards = await getBoardsService(userId);
 
   const data = boards.map((board) => {
-    const { _id, title, icon, backgroundImg, columns, createdAt, updatedAt } =
-      board;
-    return { _id, title, icon, backgroundImg, columns, createdAt, updatedAt };
+    const { _id, title, icon, createdAt, updatedAt } = board;
+    return { _id, title, icon, createdAt, updatedAt };
   });
 
   res.status(200).json({
     status: 200,
     data,
+  });
+};
+
+const getBoard: Controller = async (req: RequestWithUser, res: Response) => {
+  const userId = req.user?._id as string;
+  const boardId = req.params.boardId;
+
+  const board = (await getBoardService(userId, boardId)) as unknown;
+
+  const { _id, title, icon, backgroundImg, columns, createdAt, updatedAt } =
+    board as IBoard;
+
+  res.status(200).json({
+    status: 200,
+    data: { _id, title, icon, backgroundImg, columns, createdAt, updatedAt },
   });
 };
 
@@ -88,6 +103,7 @@ const deleteBoard: Controller = async (req: RequestWithUser, res: Response) => {
 
 export default {
   getBoards: ctrlWrapper(getBoards),
+  getBoard: ctrlWrapper(getBoard),
   createBoard: ctrlWrapper(createBoard),
   updateBoard: ctrlWrapper(updateBoard),
   deleteBoard: ctrlWrapper(deleteBoard),

@@ -1,6 +1,6 @@
 import HttpError from '../helpers/HttpError';
 import jwt from 'jsonwebtoken';
-import { findUser } from '../services/authServices';
+import { findSession, findUser } from '../services/authServices';
 import { env } from '../helpers/env.js';
 import { Controller } from '../types';
 
@@ -26,7 +26,9 @@ export const authenticate: Controller = async (req, res, next) => {
       throw new HttpError(401, 'User not found');
     }
 
-    if (!user.accessToken) {
+    const session = await findSession({ userId: id });
+
+    if (!session) {
       throw new HttpError(401, 'User already logged out');
     }
 
