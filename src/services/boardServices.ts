@@ -10,7 +10,7 @@ export const getBoardsService = async (userId: string): Promise<IBoard[]> => {
 };
 
 export const getBoardService = async (userId: string, boardId: string) => {
-  const board = await Board.find({ userId, _id: boardId }).populate({
+  const board = await Board.findOne({ userId, _id: boardId }).populate({
     path: 'columns',
     select: ['title', 'createdAt', 'updatedAt'],
     populate: {

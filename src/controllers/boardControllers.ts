@@ -31,6 +31,7 @@ const getBoards: Controller = async (req: RequestWithUser, res: Response) => {
 const getBoard: Controller = async (req: RequestWithUser, res: Response) => {
   const userId = req.user?._id as string;
   const boardId = req.params.boardId;
+  console.log(boardId);
 
   const board = (await getBoardService(userId, boardId)) as unknown;
 
