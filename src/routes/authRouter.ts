@@ -323,4 +323,8 @@ authRouter.post(
  *         description: Bad request
  */
 
+authRouter.get('/google', authControllers.googleAuth);
+
+authRouter.get('/google-redirect', authControllers.googleRedirect);
+
 export default authRouter;

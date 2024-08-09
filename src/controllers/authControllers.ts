@@ -13,6 +13,8 @@ import { env } from '../helpers/env';
 import { sendMail } from '../helpers/sendEmail';
 
 import { Controller } from '../types';
+import queryString from 'query-string';
+import axios from 'axios';
 
 const registerUser: Controller = async (req, res) => {
   const { username, email, password } = req.body;
@@ -308,6 +310,53 @@ const refreshTokens: Controller = async (req, res) => {
   });
 };
 
+const googleAuth: Controller = async (req, res) => {
+  const stringifiedParams = queryString.stringify({
+    client_id: process.env.GOOGLE_CLIENT_ID,
+    redirect_uri: `${env('BASE_URL')}/auth/google-redirect`,
+    scope: [
+      'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/userinfo.profile',
+    ].join(' '),
+    response_type: 'code',
+    access_type: 'offline',
+    prompt: 'consent',
+  });
+  return res.redirect(
+    `https://accounts.google.com/o/oauth2/v2/auth?${stringifiedParams}`
+  );
+};
+
+const googleRedirect: Controller = async (req, res) => {
+  const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+  const urlObj = new URL(fullUrl);
+  const urlParams = queryString.parse(urlObj.search);
+  const code = urlParams.code;
+  const tokenData = await axios({
+    url: `https://oauth2.googleapis.com/token`,
+    method: 'post',
+    data: {
+      client_id: env('GOOGLE_CLIENT_ID'),
+      client_secret: env('GOOGLE_CLIENT_SECRET'),
+      redirect_uri: `${env('BASE_URL')}/auth/google-redirect`,
+      grant_type: 'authorization_code',
+      code,
+    },
+  });
+  const userData = await axios({
+    url: 'https://www.googleapis.com/oauth2/v2/userinfo',
+    method: 'get',
+    headers: {
+      Authorization: `Bearer ${tokenData.data.access_token}`,
+    },
+  });
+  // userData.data.email
+  // ...
+  // ...
+  // ...
+  return res.redirect(`${env('FRONTEND_URL')}`);
+};
+
 export default {
   registerUser: ctrlWrapper(registerUser),
   loginUser: ctrlWrapper(loginUser),
@@ -317,4 +366,6 @@ export default {
   patchUser: ctrlWrapper(patchUser),
   resendVerifyMessage: ctrlWrapper(resendVerifyMessage),
   refreshTokens: ctrlWrapper(refreshTokens),
+  googleAuth: ctrlWrapper(googleAuth),
+  googleRedirect: ctrlWrapper(googleRedirect),
 };
