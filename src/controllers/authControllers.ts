@@ -78,7 +78,7 @@ const loginUser: Controller = async (req, res) => {
 
   const { _id } = user;
 
-  await authServices.abortSession({ userId: _id });
+  await authServices.abortUserSession({ userId: _id });
 
   const payload = { id: _id };
 
@@ -115,7 +115,7 @@ const loginUser: Controller = async (req, res) => {
 
 const logoutUser: Controller = async (req, res) => {
   const _id = req.user;
-  await authServices.abortSession({ userId: _id });
+  await authServices.abortUserSession({ userId: _id });
   res.json({ status: 204, message: 'Successfully logged out!' });
 };
 

@@ -9,6 +9,7 @@ import { authenticate } from '../middlewares/authenticate';
 import {
   loginSchema,
   patchSchema,
+  refreshSchema,
   registerSchema,
   resendVerifyMessageSchema,
 } from '../schemas/authSchemas';
@@ -177,7 +178,11 @@ authRouter.get('/current', authenticate, authControllers.getCurrentUser);
  *         description: Unauthorized
  */
 
-authRouter.post('/refresh', authControllers.refreshTokens);
+authRouter.post(
+  '/refresh',
+  validateBody(refreshSchema),
+  authControllers.refreshTokens
+);
 
 /**
  * @openapi

@@ -31,6 +31,9 @@ export async function createSession({
 }: ISessionBody) {
   return Session.create({ userId, accessToken, refreshToken });
 }
+export async function abortUserSession({ userId }: ISessionBody) {
+  return Session.findOneAndDelete({ userId });
+}
 export async function abortSession({ userId, _id }: ISessionBody) {
   return Session.findOneAndDelete({ userId, _id });
 }
