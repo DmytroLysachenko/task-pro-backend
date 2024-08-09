@@ -100,9 +100,9 @@ const loginUser: Controller = async (req, res) => {
   res.json({
     status: 200,
     data: {
+      sid: newSession?._id,
       accessToken,
       refreshToken,
-      sid: newSession?._id,
       user: {
         username: user?.username,
         email: user?.email,
