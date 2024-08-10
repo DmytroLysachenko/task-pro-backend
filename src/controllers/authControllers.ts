@@ -343,18 +343,96 @@ const googleRedirect: Controller = async (req, res) => {
       code,
     },
   });
-  const userData = await axios({
+  const { data } = await axios({
     url: 'https://www.googleapis.com/oauth2/v2/userinfo',
     method: 'get',
     headers: {
       Authorization: `Bearer ${tokenData.data.access_token}`,
     },
   });
-  // userData.data.email
-  // ...
-  // ...
-  // ...
-  return res.redirect(`${env('FRONTEND_URL')}`);
+
+  const { email, name, picture, id } = data;
+
+  const ACCESS_JWT_SECRET = env('ACCESS_JWT_SECRET');
+  const REFRESH_JWT_SECRET = env('REFRESH_JWT_SECRET');
+
+  const user = await authServices.findUser({ email });
+
+  if (!user) {
+    const hashPassword = await bcrypt.hash(id, 10);
+
+    const newUser = await authServices.registerUser({
+      username: name,
+      email,
+      password: hashPassword,
+      verificationToken: null,
+      isVerified: true,
+      avatarUrl: picture,
+    });
+
+    const { _id } = newUser;
+
+    const payload = { id: _id };
+
+    const accessToken = jwt.sign(payload, ACCESS_JWT_SECRET, {
+      expiresIn: '7d',
+    });
+    const refreshToken = jwt.sign(payload, REFRESH_JWT_SECRET, {
+      expiresIn: '7d',
+    });
+
+    const newSession = await authServices.createSession({
+      userId: _id,
+      accessToken,
+      refreshToken,
+    });
+
+    return res.redirect(
+      `${env('FRONTEND_URL')}?sid=${newSession._id}&accessToken=${
+        newSession.accessToken
+      }&refreshToken=${newSession.refreshToken}`
+    );
+  }
+
+  const passwordCompare = await bcrypt.compare(id, user.password);
+
+  if (!passwordCompare) {
+    throw new HttpError(
+      400,
+      'Something went wrong during google authentication'
+    );
+  }
+
+  const { _id } = user;
+
+  await authServices.abortUserSession({ userId: _id });
+
+  const payload = { id: _id };
+
+  const accessToken = jwt.sign(payload, ACCESS_JWT_SECRET, {
+    expiresIn: '7d',
+  });
+  const refreshToken = jwt.sign(payload, REFRESH_JWT_SECRET, {
+    expiresIn: '7d',
+  });
+
+  const newSession = await authServices.createSession({
+    userId: _id,
+    accessToken,
+    refreshToken,
+  });
+
+  if (!newSession) {
+    throw new HttpError(400, 'Something went wrong during session creation');
+  }
+
+  console.log(newSession);
+
+  return res.redirect(
+    `${env('FRONTEND_URL')}?sid=${newSession._id}&accessToken=${
+      newSession.accessToken
+    }&refreshToken=${newSession.refreshToken}`
+  );
 };
 
 export default {

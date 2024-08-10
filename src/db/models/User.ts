@@ -36,14 +36,6 @@ const userSchema = new Schema(
       type: String,
       default: null,
     },
-    accessToken: {
-      type: String,
-      default: null,
-    },
-    refreshToken: {
-      type: String,
-      default: null,
-    },
   },
   { versionKey: false, timestamps: true }
 );

@@ -310,8 +310,8 @@ const swaggerOptions = {
             },
             priority: {
               type: 'string',
-              enum: ['low', 'medium', 'high'],
-              default: null,
+              enum: ['none', 'low', 'medium', 'high'],
+              default: 'none',
               example: 'low',
             },
             deadline: {
@@ -345,8 +345,8 @@ const swaggerOptions = {
             },
             priority: {
               type: 'string',
-              enum: ['low', 'medium', 'high'],
-              default: null,
+              enum: ['none', 'low', 'medium', 'high'],
+              default: 'none',
               example: 'low',
             },
             deadline: {
@@ -390,8 +390,8 @@ const swaggerOptions = {
             },
             priority: {
               type: 'string',
-              enum: ['low', 'medium', 'high'],
-              default: null,
+              enum: ['none', 'low', 'medium', 'high'],
+              default: 'none',
               example: 'low',
             },
             deadline: {

@@ -328,3 +328,5 @@ authRouter.get('/google', authControllers.googleAuth);
 authRouter.get('/google-redirect', authControllers.googleRedirect);
 
 export default authRouter;
+
+// http://localhost:3000/api/auth/google-redirect?code=4%2F0AcvDMrA3snuWnW7vFwlGCThq02uHjmyN1J2T9uFv6KbnovIG8grFIkBwKApgIY3MVSHVsQ&scope=email+profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&authuser=1&prompt=consent

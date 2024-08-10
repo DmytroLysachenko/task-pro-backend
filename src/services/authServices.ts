@@ -8,12 +8,16 @@ export async function registerUser({
   email,
   password,
   verificationToken,
+  isVerified = false,
+  avatarUrl = null,
 }: IUserBody) {
   return User.create({
     username,
     email,
     password,
     verificationToken,
+    isVerified,
+    avatarUrl,
   });
 }
 

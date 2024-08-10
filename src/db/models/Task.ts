@@ -30,7 +30,7 @@ const taskSchema = new Schema(
     priority: {
       type: String,
       enum: taskPriorityLabels,
-      default: null,
+      default: 'none',
     },
     deadline: {
       type: Date,

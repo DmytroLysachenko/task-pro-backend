@@ -69,7 +69,7 @@ export interface IUser extends Document {
   avatarUrl: string | null;
   theme: 'light' | 'dark' | 'violet';
   isVerified: boolean;
-  verificationToken: string;
+  verificationToken: string | null;
 }
 
 export interface ISession extends Document {
