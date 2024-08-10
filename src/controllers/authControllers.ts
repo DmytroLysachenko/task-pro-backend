@@ -394,14 +394,14 @@ const googleRedirect: Controller = async (req, res) => {
     );
   }
 
-  const passwordCompare = await bcrypt.compare(id, user.password);
+  // const passwordCompare = await bcrypt.compare(id, user.password);
 
-  if (!passwordCompare) {
-    throw new HttpError(
-      400,
-      'Something went wrong during google authentication'
-    );
-  }
+  // if (!passwordCompare) {
+  //   throw new HttpError(
+  //     400,
+  //     'Something went wrong during google authentication'
+  //   );
+  // }
 
   const { _id } = user;
 
