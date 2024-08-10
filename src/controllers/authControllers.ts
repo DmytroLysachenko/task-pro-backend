@@ -1,20 +1,20 @@
 import fs from 'node:fs/promises';
 import jwt from 'jsonwebtoken';
 import path from 'node:path';
+import axios from 'axios';
 import bcrypt from 'bcrypt';
+import queryString from 'query-string';
 import { nanoid } from 'nanoid';
 
 import * as authServices from '../services/authServices';
 
-import ctrlWrapper from '../decorators/ctrlWrapper';
 import HttpError from '../helpers/HttpError';
 import cloudinary from '../helpers/cloudinary';
+import ctrlWrapper from '../decorators/ctrlWrapper';
 import { env } from '../helpers/env';
 import { sendMail } from '../helpers/sendEmail';
 
 import { Controller } from '../types';
-import queryString from 'query-string';
-import axios from 'axios';
 
 const registerUser: Controller = async (req, res) => {
   const { username, email, password } = req.body;
@@ -37,9 +37,9 @@ const registerUser: Controller = async (req, res) => {
 
   const data = {
     to: email,
-    subject: 'Confirm your registration in Contact List app',
+    subject: 'Confirm your registration in TaskPro app',
     text: 'Press on the link to confirm your email',
-    html: `Good day! Please click on the following link to confirm your account in Task-pro app. <a href="${BASE_URL}/auth/verify/${verificationToken}" target="_blank" rel="noopener noreferrer">Confirm my mail</a>`,
+    html: `Good day! Please click on the following link to confirm your account in TaskPro app. <a href="${BASE_URL}/auth/verify/${verificationToken}" target="_blank" rel="noopener noreferrer">Confirm my mail</a>`,
   };
 
   sendMail(data);
@@ -393,15 +393,6 @@ const googleRedirect: Controller = async (req, res) => {
       }&refreshToken=${newSession.refreshToken}`
     );
   }
-
-  // const passwordCompare = await bcrypt.compare(id, user.password);
-
-  // if (!passwordCompare) {
-  //   throw new HttpError(
-  //     400,
-  //     'Something went wrong during google authentication'
-  //   );
-  // }
 
   const { _id } = user;
 
