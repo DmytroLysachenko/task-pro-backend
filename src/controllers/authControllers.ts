@@ -18,6 +18,7 @@ import { Controller } from '../types';
 
 const registerUser: Controller = async (req, res) => {
   const { username, email, password } = req.body;
+
   const user = await authServices.findUser({ email });
 
   if (user) {
@@ -25,7 +26,9 @@ const registerUser: Controller = async (req, res) => {
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
+
   const verificationToken = nanoid(12);
+
   const newUser = await authServices.registerUser({
     username,
     email,
@@ -55,9 +58,10 @@ const registerUser: Controller = async (req, res) => {
 };
 
 const loginUser: Controller = async (req, res) => {
+  const { email, password } = req.body;
+
   const ACCESS_JWT_SECRET = env('ACCESS_JWT_SECRET');
   const REFRESH_JWT_SECRET = env('REFRESH_JWT_SECRET');
-  const { email, password } = req.body;
 
   const user = await authServices.findUser({ email });
 
@@ -117,7 +121,9 @@ const loginUser: Controller = async (req, res) => {
 
 const logoutUser: Controller = async (req, res) => {
   const _id = req.user;
+
   await authServices.abortUserSession({ userId: _id });
+
   res.json({ status: 204, message: 'Successfully logged out!' });
 };
 
@@ -158,9 +164,12 @@ const patchUser: Controller = async (req, res) => {
         'Cannot change email to that which is already occupied.'
       );
     }
+
     const BASE_URL = env('BASE_URL');
+
     verificationToken = nanoid(12);
     isVerified = false;
+
     const data = {
       to: email,
       subject: 'Confirm your registration in Contact List app',
@@ -168,7 +177,7 @@ const patchUser: Controller = async (req, res) => {
       html: `Good day! Please click on the following link to confirm your account in Task-pro app. <a href="${BASE_URL}/auth/verify/${verificationToken}" target="_blank" rel="noopener noreferrer">Confirm my mail</a>`,
     };
 
-    await sendMail(data);
+    sendMail(data);
   }
 
   if (req?.file?.path) {
@@ -176,10 +185,13 @@ const patchUser: Controller = async (req, res) => {
       const { secure_url } = await cloudinary.uploader.upload(req.file.path, {
         folder: 'avatars',
       });
+
       avatarUrl = secure_url;
+
       await fs.unlink(req.file.path);
     } catch (error) {
       await fs.unlink(req.file.path);
+
       throw error;
     }
   }
@@ -214,22 +226,28 @@ const verifyUser: Controller = async (req, res) => {
   const user = await authServices.findUser({
     verificationToken,
   });
+
   if (!user) {
     throw new HttpError(400, 'Invalid verification token');
   }
+
   if (user.isVerified) {
     throw new HttpError(400, 'Verification has already been passed');
   }
+
   await authServices.updateUser(
     { verificationToken },
     { verificationToken: 'User verified', isVerified: true }
   );
+
   const root = path.resolve('src', 'constants');
+
   res.sendFile('htmlPage.html', { root });
 };
 
 const resendVerifyMessage: Controller = async (req, res) => {
   const { email } = req.body;
+
   const user = await authServices.findUser({
     email,
   });
@@ -237,19 +255,25 @@ const resendVerifyMessage: Controller = async (req, res) => {
   if (!user) {
     throw new HttpError(400, 'Invalid verification token');
   }
+
   if (user.isVerified) {
     throw new HttpError(400, 'Verification has already been passed');
   }
+
   const verificationToken = nanoid(12);
+
   await authServices.updateUser({ email }, { verificationToken });
+
   const BASE_URL = env('BASE_URL');
+
   const data = {
     to: email,
     subject: 'Confirm your registration in Contact List app',
     text: 'Press on the link to confirm your email',
     html: `Good day! Please click on the following link to confirm your account in Contact List app. <a href="${BASE_URL}/users/verify/${verificationToken}" target="_blank" rel="noopener noreferrer">Confirm my mail</a>`,
   };
-  await sendMail(data);
+
+  sendMail(data);
 
   res.json({
     status: 200,
@@ -258,10 +282,11 @@ const resendVerifyMessage: Controller = async (req, res) => {
 };
 
 const refreshTokens: Controller = async (req, res) => {
+  const { sid } = req.body;
+  const { authorization } = req.headers;
+
   const REFRESH_JWT_SECRET = env('REFRESH_JWT_SECRET');
   const ACCESS_JWT_SECRET = env('ACCESS_JWT_SECRET');
-  const { authorization } = req.headers;
-  const { sid } = req.body;
 
   if (!authorization) {
     throw new HttpError(401, `Authorization header not found`);
@@ -322,6 +347,7 @@ const googleAuth: Controller = async (req, res) => {
     access_type: 'offline',
     prompt: 'consent',
   });
+
   return res.redirect(
     `https://accounts.google.com/o/oauth2/v2/auth?${stringifiedParams}`
   );
@@ -332,6 +358,7 @@ const googleRedirect: Controller = async (req, res) => {
   const urlObj = new URL(fullUrl);
   const urlParams = queryString.parse(urlObj.search);
   const code = urlParams.code;
+
   const tokenData = await axios({
     url: `https://oauth2.googleapis.com/token`,
     method: 'post',
@@ -343,6 +370,7 @@ const googleRedirect: Controller = async (req, res) => {
       code,
     },
   });
+
   const { data } = await axios({
     url: 'https://www.googleapis.com/oauth2/v2/userinfo',
     method: 'get',
@@ -371,7 +399,6 @@ const googleRedirect: Controller = async (req, res) => {
     });
 
     const { _id } = newUser;
-
     const payload = { id: _id };
 
     const accessToken = jwt.sign(payload, ACCESS_JWT_SECRET, {
