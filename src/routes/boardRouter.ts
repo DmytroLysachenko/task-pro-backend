@@ -35,11 +35,11 @@ router.get('/boards', authenticate, boardController.getBoards);
  *         description: Unauthorized
  */
 
-router.get('/board', authenticate, boardController.getBoard);
+router.get('/boards/:boardId', authenticate, boardController.getBoard);
 
 /**
  * @openapi
- * /api/board/:boardId:
+ * /api/boards/:boardId:
  *   get:
  *     tags:
  *       - Boards
