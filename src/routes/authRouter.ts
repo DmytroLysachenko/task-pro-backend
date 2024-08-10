@@ -325,8 +325,23 @@ authRouter.post(
 
 authRouter.get('/google', authControllers.googleAuth);
 
+/**
+ * @openapi
+ * /api/auth/google:
+ *   get:
+ *     tags:
+ *       - Auth
+ *     summary: Google authentication
+ *     responses:
+ *       200:
+ *         description:
+ *          Successful operation (redirect to front-end with accessToken, refreshToken and sid in query). Then use GET /api/auth/current
+ *       400:
+ *         description: Something went wrong during session creation
+ *       500:
+ *         description: An unexpected error occurred
+ */
+
 authRouter.get('/google-redirect', authControllers.googleRedirect);
 
 export default authRouter;
-
-// http://localhost:3000/api/auth/google-redirect?code=4%2F0AcvDMrA3snuWnW7vFwlGCThq02uHjmyN1J2T9uFv6KbnovIG8grFIkBwKApgIY3MVSHVsQ&scope=email+profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&authuser=1&prompt=consent
