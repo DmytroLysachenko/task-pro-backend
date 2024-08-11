@@ -40,8 +40,10 @@ const getBoards: Controller = async (req: RequestWithUser, res: Response) => {
 
   res.status(200).json({
     status: 200,
-    backgroundPreviews,
-    data,
+    data: {
+      backgroundPreviews,
+      boards: data,
+    },
   });
 };
 
