@@ -13,6 +13,7 @@ export const backgroundConvert: Controller = async (req, res, next) => {
       );
     } else if (backgroundImg) {
       req.body.backgroundImg = boardBgImages[backgroundImg];
+      console.log(boardBgImages[backgroundImg]);
     } else {
       req.body.backgroundImg = null;
     }

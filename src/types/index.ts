@@ -35,6 +35,7 @@ export interface IBoard extends Document {
     mobile?: string;
     tablet?: string;
     desktop?: string;
+    preview?: string;
   } | null;
   columns: object[];
   createdAt: Date;

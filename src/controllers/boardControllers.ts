@@ -11,6 +11,7 @@ import {
 import HttpError from '../helpers/HttpError';
 
 import { Controller, IBoard, RequestWithUser } from '../types/index';
+import { backgroundPreviews } from '../constants/boardBgImgs';
 
 const getBoards: Controller = async (req: RequestWithUser, res: Response) => {
   const userId = req.user?._id as string;
@@ -18,12 +19,28 @@ const getBoards: Controller = async (req: RequestWithUser, res: Response) => {
   const boards = await getBoardsService(userId);
 
   const data = boards.map((board) => {
-    const { _id, title, icon, createdAt, updatedAt } = board;
-    return { _id, title, icon, createdAt, updatedAt };
+    const { _id, title, icon, createdAt, updatedAt, backgroundImg } = board;
+
+    const previewEntry = Object.entries(backgroundPreviews).find((entry) => {
+      return entry[1] === backgroundImg?.preview;
+    });
+
+    console.log(previewEntry);
+    const preview = previewEntry ? previewEntry[0] : 'none';
+
+    return {
+      _id,
+      title,
+      icon,
+      preview,
+      createdAt,
+      updatedAt,
+    };
   });
 
   res.status(200).json({
     status: 200,
+    backgroundPreviews,
     data,
   });
 };
