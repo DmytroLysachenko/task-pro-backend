@@ -25,7 +25,6 @@ const getBoards: Controller = async (req: RequestWithUser, res: Response) => {
       return entry[1] === backgroundImg?.preview;
     });
 
-    console.log(previewEntry);
     const preview = previewEntry ? previewEntry[0] : 'none';
 
     return {
@@ -40,17 +39,13 @@ const getBoards: Controller = async (req: RequestWithUser, res: Response) => {
 
   res.status(200).json({
     status: 200,
-    data: {
-      backgroundPreviews,
-      boards: data,
-    },
+    data,
   });
 };
 
 const getBoard: Controller = async (req: RequestWithUser, res: Response) => {
   const userId = req.user?._id as string;
   const boardId = req.params.boardId;
-  console.log(boardId);
 
   const board = (await getBoardService(userId, boardId)) as unknown;
 
@@ -111,8 +106,6 @@ const deleteBoard: Controller = async (req: RequestWithUser, res: Response) => {
   const boardId = req.params.boardId;
 
   const deletedBoard = await deleteBoardService({ boardId, userId });
-
-  console.log(deletedBoard);
 
   if (!deletedBoard) {
     throw new HttpError(404, 'Board not found');
