@@ -69,17 +69,17 @@ const loginUser: Controller = async (req, res) => {
     throw new HttpError(400, 'Email or password invalid');
   }
 
+  const passwordCompare = await bcrypt.compare(password, user.password);
+
+  if (!passwordCompare) {
+    throw new HttpError(400, 'Email or password invalid');
+  }
+
   if (!user.isVerified) {
     throw new HttpError(
       403,
       'User mail is not verified, please check your mail for following instructions'
     );
-  }
-
-  const passwordCompare = await bcrypt.compare(password, user.password);
-
-  if (!passwordCompare) {
-    throw new HttpError(400, 'Email or password invalid');
   }
 
   const { _id } = user;
