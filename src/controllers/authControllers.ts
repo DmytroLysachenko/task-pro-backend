@@ -88,7 +88,7 @@ const loginUser: Controller = async (req, res) => {
 
   const payload = { id: _id };
 
-  const accessToken = jwt.sign(payload, ACCESS_JWT_SECRET, { expiresIn: '7d' });
+  const accessToken = jwt.sign(payload, ACCESS_JWT_SECRET, { expiresIn: '1h' });
   const refreshToken = jwt.sign(payload, REFRESH_JWT_SECRET, {
     expiresIn: '7d',
   });
@@ -314,7 +314,7 @@ const refreshTokens: Controller = async (req, res) => {
 
   const payload = { id };
 
-  const accessToken = jwt.sign(payload, ACCESS_JWT_SECRET, { expiresIn: '7d' });
+  const accessToken = jwt.sign(payload, ACCESS_JWT_SECRET, { expiresIn: '1h' });
   const refreshToken = jwt.sign(payload, REFRESH_JWT_SECRET, {
     expiresIn: '7d',
   });
@@ -402,7 +402,7 @@ const googleRedirect: Controller = async (req, res) => {
     const payload = { id: _id };
 
     const accessToken = jwt.sign(payload, ACCESS_JWT_SECRET, {
-      expiresIn: '7d',
+      expiresIn: '1h',
     });
     const refreshToken = jwt.sign(payload, REFRESH_JWT_SECRET, {
       expiresIn: '7d',
@@ -428,7 +428,7 @@ const googleRedirect: Controller = async (req, res) => {
   const payload = { id: _id };
 
   const accessToken = jwt.sign(payload, ACCESS_JWT_SECRET, {
-    expiresIn: '7d',
+    expiresIn: '1h',
   });
   const refreshToken = jwt.sign(payload, REFRESH_JWT_SECRET, {
     expiresIn: '7d',

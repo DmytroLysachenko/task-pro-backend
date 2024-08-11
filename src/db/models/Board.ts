@@ -8,6 +8,7 @@ const backgroundImgSchema = new Schema(
     mobile: String,
     tablet: String,
     desktop: String,
+    preview: String,
   },
   { _id: false }
 );
