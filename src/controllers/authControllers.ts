@@ -124,7 +124,7 @@ const logoutUser: Controller = async (req, res) => {
 
   await authServices.abortUserSession({ userId: _id });
 
-  res.json({ status: 204, message: 'Successfully logged out!' });
+  res.status(204);
 };
 
 const getCurrentUser: Controller = async (req, res) => {
