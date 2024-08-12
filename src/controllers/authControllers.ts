@@ -172,9 +172,9 @@ const patchUser: Controller = async (req, res) => {
 
     const data = {
       to: email,
-      subject: 'Confirm your registration in Contact List app',
+      subject: 'Confirm your registration in TaskPro app',
       text: 'Press on the link to confirm your email',
-      html: `Good day! Please click on the following link to confirm your account in Task-pro app. <a href="${BASE_URL}/auth/verify/${verificationToken}" target="_blank" rel="noopener noreferrer">Confirm my mail</a>`,
+      html: `Good day! Please click on the following link to confirm your account in TaskPro app. <a href="${BASE_URL}/auth/verify/${verificationToken}" target="_blank" rel="noopener noreferrer">Confirm my mail</a>`,
     };
 
     sendMail(data);
@@ -268,9 +268,9 @@ const resendVerifyMessage: Controller = async (req, res) => {
 
   const data = {
     to: email,
-    subject: 'Confirm your registration in Contact List app',
+    subject: 'Confirm your registration in TaskPro app',
     text: 'Press on the link to confirm your email',
-    html: `Good day! Please click on the following link to confirm your account in Contact List app. <a href="${BASE_URL}/users/verify/${verificationToken}" target="_blank" rel="noopener noreferrer">Confirm my mail</a>`,
+    html: `Good day! Please click on the following link to confirm your account in TaskPro app. <a href="${BASE_URL}/auth/verify/${verificationToken}" target="_blank" rel="noopener noreferrer">Confirm my mail</a>`,
   };
 
   sendMail(data);
