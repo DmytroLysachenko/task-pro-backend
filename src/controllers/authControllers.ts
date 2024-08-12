@@ -120,7 +120,7 @@ const loginUser: Controller = async (req, res) => {
 };
 
 const logoutUser: Controller = async (req, res) => {
-  const _id = req.user;
+  const { _id } = req.user as { _id: string };
 
   await authServices.abortUserSession({ userId: _id });
 
