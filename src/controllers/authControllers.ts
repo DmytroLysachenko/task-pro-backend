@@ -121,10 +121,10 @@ const loginUser: Controller = async (req, res) => {
 
 const logoutUser: Controller = async (req, res) => {
   const { _id } = req.user as { _id: string };
-
   await authServices.abortUserSession({ userId: _id });
-
-  res.status(204);
+  res.status(204).json({
+    status: 204,
+  });
 };
 
 const getCurrentUser: Controller = async (req, res) => {
