@@ -1,6 +1,6 @@
 {
   "engines": {
-    "node": ">=20.6.0"
+    "node": "20.12.0"
   },
   "name": "task-pro-backend",
   "version": "1.0.0",
